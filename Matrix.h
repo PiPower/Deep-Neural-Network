@@ -1,6 +1,7 @@
 #pragma once
 #include <assert.h>
 #include <vector>
+#include <random>
 template <typename Type>
 
 class Matrix
@@ -12,7 +13,7 @@ public:
 		RANDOM_INIT = 1,
 	};
 public:
-	Matrix( int Columns = 1, int Rows = 1, Init_Type init= Init_Type::ZERO_INIT)
+	Matrix( int Columns = 1, int Rows = 1, Init_Type init= Init_Type::ZERO_INIT,float lower_bound=-2.0, float upper_bound=2.0)
 		:
 		Columns(Columns), Rows(Rows)
 	{
@@ -22,6 +23,13 @@ public:
 		{
 		case Init_Type::ZERO_INIT:
 			memset(MatPtr.data(), 0, sizeof(Type) * Rows * Columns);
+			break;
+		case Init_Type::RANDOM_INIT:
+		{
+			std::uniform_real_distribution<double> unif(lower_bound, upper_bound);
+			std::default_random_engine re;
+			for (int i = 0; i < Rows * Columns; i++) MatPtr[i] = unif(re);
+		} break;
 		}
 	}
 

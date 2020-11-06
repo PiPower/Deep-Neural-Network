@@ -5,6 +5,8 @@ class Network
 public:
 	Network(double LearningRate);
 	void AddLayer(DenseLayer layer);
+	std::vector< Matrix<double>> Predict(std::vector<Matrix<double>> Input);
 private:
-	std::vector<DenseLayer> Layers
+	float Learning_Rate;
+	std::vector<DenseLayer> Layers;
 };
