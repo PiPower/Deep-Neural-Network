@@ -10,3 +10,13 @@ double DerivativeSigmoid(double x)
 {
 	return Sigmoid(x) * (1 - Sigmoid(x));
 }
+
+Matrix<double> MSE(Matrix<double> A, Matrix<double> Y)
+{
+	return (A - Y) * (A - Y);
+}
+
+Matrix<double> MSE_Der(Matrix<double> A, Matrix<double> Y)
+{
+	return (A - Y);
+}

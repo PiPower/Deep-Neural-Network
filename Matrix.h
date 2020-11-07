@@ -2,10 +2,12 @@
 #include <assert.h>
 #include <vector>
 #include <random>
-template <typename Type>
 
+
+template <typename Type>
 class Matrix
 {
+	friend Matrix<double> Hadamard(const Matrix<double>& a1, const  Matrix<double>& a2);
 public:
 	enum class Init_Type
 	{
@@ -33,6 +35,24 @@ public:
 		}
 	}
 
+	void Transpose()
+	{
+		std::vector<Type> Transposed;
+		Transposed.resize(Columns * Rows);
+
+		for (int y = 0; y < Rows; y++)
+		{
+			for (int x = 0; x < Columns; x++)
+			{
+				Transposed[x * Rows + y] = MatPtr[y * Columns + x];
+			}
+		}
+
+		std::swap(Columns, Rows);
+		MatPtr = Transposed;
+	}
+
+
 	void ApplyFunction(Type  (* FcnPtr)(Type Z) )
 	{
 		for (int i = 0; i < Columns * Rows; i++) MatPtr[i] = FcnPtr(MatPtr[i]);
@@ -56,6 +76,11 @@ public:
 	double& operator[](int index)
 	{
 		return MatPtr[index];
+	}
+
+	void SetValue(unsigned int i, unsigned int j, Type Value)
+	{
+		MatPtr[i * Columns + j] = Value;
 	}
 	// dodawanie Matrixy i zwracanie wyniku w postaci Matrixy
 	Matrix operator+(const Matrix& rhs)
@@ -91,7 +116,6 @@ public:
 				out[i] = MatPtr[i] - rhs.MatPtr[i];
 			}
 			return out;
-	;
 	}
 	// odejmowanie Matrixy I zapisywanie dzialania w obiekcie wywolujacym
 	void operator-=(const Matrix& rhs)

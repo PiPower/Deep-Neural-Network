@@ -9,11 +9,11 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
     </Filter>
-    <Filter Include="Math">
-      <UniqueIdentifier>{d1ab9a83-c5e9-4e13-b8bb-3346044473d0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Layers">
       <UniqueIdentifier>{549c957e-3e3c-40fd-879c-bf2662ba20e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Utilities">
+      <UniqueIdentifier>{d1ab9a83-c5e9-4e13-b8bb-3346044473d0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -26,19 +26,25 @@
     <ClCompile Include="DenseLayer.cpp">
       <Filter>Layers</Filter>
     </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Pliki źródłowe</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Network.h">
       <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
     <ClInclude Include="Matrix.h">
-      <Filter>Math</Filter>
+      <Filter>Utilities</Filter>
     </ClInclude>
     <ClInclude Include="DenseLayer.h">
       <Filter>Layers</Filter>
     </ClInclude>
     <ClInclude Include="Functions.h">
-      <Filter>Math</Filter>
+      <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Mnist_Loader.h">
+      <Filter>Utilities</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
