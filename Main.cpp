@@ -8,15 +8,13 @@ using namespace std;
 
 int main()
 {
-	int NumberImg = 20000;
+	int NumberImg = 50000;
 	int TestImg = 10000;
 
-	DenseLayer lel{28*28,64,Sigmoid,DerivativeSigmoid,MatrixInit::RANDOM_INIT };
-	DenseLayer lel2{ 64,32,Sigmoid,DerivativeSigmoid,MatrixInit::RANDOM_INIT };
-	DenseLayer lel3{ 32,10,Sigmoid,DerivativeSigmoid,MatrixInit::RANDOM_INIT };
+	DenseLayer lel{28*28,30,Sigmoid,DerivativeSigmoid,MatrixInit::RANDOM_INIT };
+	DenseLayer lel3{ 30,10,Sigmoid,DerivativeSigmoid,MatrixInit::RANDOM_INIT };
 	Network net;
 	net.AddLayer(lel);
-	net.AddLayer(lel2);
 	net.AddLayer(lel3);
 	net.SetCostFun(MSE, MSE_Der);
 	//---------------------
@@ -42,7 +40,7 @@ int main()
 
 
 
-	net.Train(TrainingData, TrainingLabel, 200, 20, 3.0);
+	net.Train(TrainingData, TrainingLabel, 100, 10, 0.4);
 
 	vector<Matrix<double>> TestData;
 	vector<Matrix<double>> TestLabel;
@@ -76,5 +74,4 @@ int main()
 
 
 	cout << "Accuracy: "<< counter << "/"<< TestImg;
-
 }

@@ -2,7 +2,7 @@
 #include <assert.h>
 #include <vector>
 #include <random>
-
+#include <iostream>
 
 template <typename Type>
 class Matrix
@@ -15,7 +15,7 @@ public:
 		RANDOM_INIT = 1,
 	};
 public:
-	Matrix( int Columns = 1, int Rows = 1, Init_Type init= Init_Type::ZERO_INIT,float lower_bound=-1.0, float upper_bound=1.0)
+	Matrix( int Columns = 1, int Rows = 1, Init_Type init= Init_Type::ZERO_INIT, double lower_bound=0, double upper_bound=1.0)
 		:
 		Columns(Columns), Rows(Rows)
 	{
@@ -28,9 +28,10 @@ public:
 			break;
 		case Init_Type::RANDOM_INIT:
 		{
-			std::uniform_real_distribution<double> unif(lower_bound, upper_bound);
-			std::default_random_engine re;
-			for (int i = 0; i < Rows * Columns; i++) MatPtr[i] = unif(re);
+			std::normal_distribution<double> unif(0, 1);
+			std::random_device rd;
+			std::mt19937_64 gen(rd());
+			for (int i = 0; i < Rows * Columns; i++) MatPtr[i] = unif(gen);
 		} break;
 		}
 	}
@@ -50,6 +51,11 @@ public:
 		return Transposed;
 	}
 
+
+	void Clear()
+	{
+		memset(MatPtr.data(), 0, sizeof(double) * Columns * Rows);
+	}
 
 	void ApplyFunction(Type  (* FcnPtr)(Type Z) )
 	{
@@ -200,21 +206,21 @@ public:
 			return true;
 		
 	}
-	/*void ShowValues()
+	void ShowValues()
 	{
-		cout << "--------------------------------------------------------- \n";
+		std::cout << "--------------------------------------------------------- \n";
 		for (int i = 0; i < Rows; i++)
 		{
-			cout << "|";
+			std::cout << "|";
 			for (int g = 0; g < Columns; g++)
 			{
 				int index = i * Columns + g;
 				double wartosc = MatPtr[index];
-				cout << "   " << MatPtr[index];
+				std::cout << "   " << MatPtr[index];
 			}
-			cout << "|\n";
+			std::cout << "|\n";
 		}
-	}*/
+	}
 private:
 	std::vector<Type> MatPtr;
 	int Columns;

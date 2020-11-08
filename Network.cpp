@@ -7,6 +7,7 @@ Network::Network()
 {
 }
 
+
 void Network::AddLayer(DenseLayer layer)
 {
 	if(Layers.size() > 0 ) assert(Layers[Layers.size() - 1].GetOutDim() == layer.GetInDim());
@@ -56,8 +57,21 @@ void Network::Train(MatrixD_Array TrainingData, MatrixD_Array TrainingLabels, in
 	std::random_device rd;
 	std::mt19937 g(rd());
 
-	
+	std::vector<Matrix<double>> NablaWeights;
+	std::vector<Matrix<double>> NablaBiases;
 
+
+	NablaWeights.resize(Layers.size());
+	NablaBiases.resize(Layers.size());
+
+
+	for (int i = 0; i < Layers.size(); i++)
+	{
+		NablaWeights[i] = Matrix<double>(Layers[i].GetInDim(), Layers[i].GetOutDim());
+		NablaBiases[i] = Matrix<double>(1, Layers[i].GetOutDim());
+	}
+
+	//---- Epoch iterating
 	for (int i = 0; i < epochs; i++)
 	{
 		cout << "Epoch number: " << i << endl;
@@ -66,16 +80,12 @@ void Network::Train(MatrixD_Array TrainingData, MatrixD_Array TrainingLabels, in
 		// Batch iterating 
 		for (int batch = 0; batch < TrainingData.size(); batch = batch + BatchSize)
 		{
-			// Per Batch iterating
-			//vector<Matrix<double>> Gradient;
+			for (int i = 0; i < Layers.size(); i++)
+			{
+				NablaWeights[i].Clear();
+				NablaBiases[i].Clear();
+			}
 
-			std::vector<Matrix<double>> NablaWeights;
-			std::vector<Matrix<double>> NablaBiases;
-
-
-			NablaWeights.resize(Layers.size());
-			NablaBiases.resize(Layers.size());
-			//Gradient.resize(Layers.size());
 
 			int i = 0;
 			while( i < BatchSize && (i+batch)< TrainingData.size())
@@ -94,46 +104,26 @@ void Network::Train(MatrixD_Array TrainingData, MatrixD_Array TrainingLabels, in
 					OutputsA[index + 1] = layer.ApplyActivation(OutputsZ[index]);
 					index++;
 				}
-                // ---- Calculating Delta that will be later devided by batch size element wise 
-				BackPropagation(OutputsA, OutputsZ, TrainingLabels[indexes[i + batch]]);
-				Matrix<double> Delta_L = Hadamard(CostFuncDer(OutputsA[OutputsA.size() - 1], TrainingLabels[indexes[i + batch]]), Layers[Layers.size() - 1].ActivationPrime(OutputsZ[OutputsZ.size() - 1]));
-				
-				if (i == 0)
-				{
-					NablaWeights[Layers.size() - 1] = Delta_L * OutputsA[OutputsA.size() - 2].Transpose();
-					NablaBiases[Layers.size() - 1] = Delta_L;
-				}
-				else
-				{
-					NablaWeights[Layers.size() - 1] = NablaWeights[Layers.size() - 1]+ Delta_L * OutputsA[OutputsA.size() - 2].Transpose();
-					NablaBiases[Layers.size() - 1] += Delta_L;
-				}
+                // ---- Calculating Nabla that will be later devided by batch size element wise 
+				auto DeltaNabla = BackPropagation(OutputsA, OutputsZ, TrainingLabels[indexes[i + batch]]);
 
-				for (int j = 0; j  < Layers.size() - 1; j++)
+				for (int i = 0; i < Layers.size(); i++)
 				{
-					Delta_L = Hadamard(Layers[Layers.size() - 1 - j].Weights.Transpose()* Delta_L, Layers[Layers.size() - 2 - j].ActivationPrime(OutputsZ[Layers.size() - 2 - j]));
-					if (i == 0)
-					{
-						NablaWeights[Layers.size() - 2 - j] = Delta_L * OutputsA[OutputsA.size() - 3 - j].Transpose();
-						NablaBiases[Layers.size() - 2-j] = Delta_L;
-					}
-					else
-					{
-						NablaWeights[Layers.size() - 2 - j] += Delta_L * OutputsA[OutputsA.size() - 3 - j].Transpose();
-						NablaBiases[Layers.size() - 2-j] += Delta_L;
-					}
+					NablaWeights[i] = NablaWeights[i] + DeltaNabla.first[i];
+					NablaBiases[i] = NablaBiases[i] + DeltaNabla.second[i];
 				}
 			i++;
 			}
 
+			for (int g = 0; g < Layers.size(); g++)
+			{
+				
+				Layers[g].Weights = Layers[g].Weights - NablaWeights[g] * LearningRate;
+				Layers[g].Biases = Layers[g].Biases - NablaBiases[g] * LearningRate;
+			}
 		   // std::transform(NablaWeights.begin(), NablaWeights.end(), NablaWeights.begin(),[BatchSize, LearningRate](Matrix<double>& Weight) {return Weight * (LearningRate / BatchSize);});
 			//std::transform(NablaBiases.begin(), NablaBiases.end(), NablaBiases.begin(), [BatchSize, LearningRate](Matrix<double>& Bias) {return Bias * (LearningRate / BatchSize); });
 
-			for (int g = 0; g < Layers.size(); g++)
-			{
-				Layers[g].Weights = Layers[g].Weights - NablaWeights[g]*(LearningRate / BatchSize);
-				Layers[g].Biases = Layers[g].Biases - NablaBiases[g]*(LearningRate / BatchSize);
-			}
 		}
 	}
 }
@@ -143,18 +133,32 @@ std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation( MatrixD_Array&
 	MatrixD_Array NablaWeight;
 	MatrixD_Array NablaBias;
 
-	Matrix<double> Delta_L = Hadamard(CostFuncDer(OutputsA[OutputsA.size() - 1],label), Layers[Layers.size() - 1].ActivationPrime(OutputsZ[OutputsZ.size() - 1]));
+	NablaWeight.resize(Layers.size());
+	NablaBias.resize(Layers.size());
+
+	auto zs = Layers[Layers.size() - 1].ActivationPrime(OutputsZ[OutputsZ.size() - 1]);
+	Matrix<double> Delta_L = Hadamard(CostFuncDer(OutputsA[OutputsA.size() - 1],label), zs);
 
 	NablaWeight[Layers.size() - 1] = Delta_L * OutputsA[OutputsA.size() - 2].Transpose();
 	NablaBias[Layers.size() - 1] = Delta_L;
 
 
-	for (int j = 0; j < Layers.size() - 1; j++)
+	/*for (int j = 0; j < Layers.size() - 1; j++)
 	{
-		Delta_L = Hadamard(Layers[Layers.size() - 1 - j].Weights.Transpose() * Delta_L, Layers[Layers.size() - 2 - j].ActivationPrime(OutputsZ[Layers.size() - 2 - j]));
+		auto sp = Layers[Layers.size() - 2 - j].ActivationPrime(OutputsZ[Layers.size() - 2 - j]);
+		Delta_L = Hadamard(Layers[Layers.size() - 1 - j].Weights.Transpose() * Delta_L, sp );
 		
 		NablaWeight[Layers.size() - 2 - j] = Delta_L * OutputsA[OutputsA.size() - 3 - j].Transpose();
 		NablaBias[Layers.size() - 2 - j] = Delta_L;
+	}*/
+
+	for (int j = 2; j <= Layers.size() ; j++)
+	{
+		auto sp = Layers[Layers.size() - j].ActivationPrime(OutputsZ[Layers.size() -j]);
+		Delta_L = Hadamard(Layers[Layers.size() -  j+1 ].Weights.Transpose() * Delta_L, sp);
+
+		NablaWeight[Layers.size() - j] = Delta_L * OutputsA[OutputsA.size() -j-1].Transpose();
+		NablaBias[Layers.size() - j] = Delta_L;
 	}
 
 	return make_pair(NablaWeight, NablaBias);
