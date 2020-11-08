@@ -15,7 +15,7 @@ public:
 		RANDOM_INIT = 1,
 	};
 public:
-	Matrix( int Columns = 1, int Rows = 1, Init_Type init= Init_Type::ZERO_INIT,float lower_bound=-2.0, float upper_bound=2.0)
+	Matrix( int Columns = 1, int Rows = 1, Init_Type init= Init_Type::ZERO_INIT,float lower_bound=-1.0, float upper_bound=1.0)
 		:
 		Columns(Columns), Rows(Rows)
 	{
@@ -35,21 +35,19 @@ public:
 		}
 	}
 
-	void Transpose()
+	Matrix<Type> Transpose()
 	{
-		std::vector<Type> Transposed;
-		Transposed.resize(Columns * Rows);
+		Matrix<Type> Transposed(Rows,Columns);
 
 		for (int y = 0; y < Rows; y++)
 		{
 			for (int x = 0; x < Columns; x++)
 			{
-				Transposed[x * Rows + y] = MatPtr[y * Columns + x];
+				Transposed.MatPtr[x * Rows + y] = MatPtr[y * Columns + x];
 			}
 		}
 
-		std::swap(Columns, Rows);
-		MatPtr = Transposed;
+		return Transposed;
 	}
 
 
@@ -104,6 +102,22 @@ public:
 				MatPtr[i] += rhs.MatPtr[i];
 			}
 
+	}
+
+	int GetColumnMaxIndex(int i)
+	{
+
+		Type Max = std::numeric_limits<Type>::min();;
+		int index = 0;
+		for (int j = 0; j < Rows; j++)
+		{
+			if (Max < MatPtr[j * Columns + i])
+			{
+				Max = MatPtr[j * Columns + i];
+				index = j;
+			}
+		}
+		return index;
 	}
 	// odejmowanie Matrixy i zwracanie wyniku w postaci Matrixy
 	Matrix operator-(const Matrix& rhs)
@@ -163,6 +177,18 @@ public:
 			return out;
 		
 	}
+
+	Matrix<Type> operator*(const double& number)
+	{
+		Matrix<double> out(Columns, Rows);
+
+		for (int i = 0; i < Rows * Columns; i++)
+		{
+			out.MatPtr[i] = MatPtr[i]* number;
+		}
+		return out;
+	}
+
 	bool operator==(const Matrix& rhs)
 	{
 		assert(Columns == rhs.Columns && Rows == rhs.Rows);
