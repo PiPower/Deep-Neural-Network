@@ -15,7 +15,7 @@ public:
 		RANDOM_INIT = 1,
 	};
 public:
-	Matrix( int Columns = 1, int Rows = 1, Init_Type init= Init_Type::ZERO_INIT, double lower_bound=0, double upper_bound=1.0)
+	Matrix( int Columns = 1, int Rows = 1, Init_Type init= Init_Type::ZERO_INIT, double mean=0, double stddev=1.0)
 		:
 		Columns(Columns), Rows(Rows)
 	{
@@ -28,7 +28,7 @@ public:
 			break;
 		case Init_Type::RANDOM_INIT:
 		{
-			std::normal_distribution<double> unif(0, 1);
+			std::normal_distribution<double> unif(mean, stddev);
 			std::random_device rd;
 			std::mt19937_64 gen(rd());
 			for (int i = 0; i < Rows * Columns; i++) MatPtr[i] = unif(gen);
@@ -51,7 +51,14 @@ public:
 		return Transposed;
 	}
 
-
+	Type GetAt(int i,int j)
+	{
+		return MatPtr[i * Columns + j];
+	}
+	int GetRows()
+	{
+		return Rows;
+	}
 	void Clear()
 	{
 		memset(MatPtr.data(), 0, sizeof(double) * Columns * Rows);

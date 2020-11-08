@@ -6,7 +6,7 @@ class DenseLayer
 {
 	friend Network;
 public:
-	DenseLayer(int input_dim, int output_dim,double  (*activation)(double Z) , double  (*activationDer)(double Z),MatrixInit init= MatrixInit::ZERO_INIT);
+	DenseLayer(int input_dim, int output_dim, Matrix<double>(*activation)(Matrix<double>& Z) , Matrix<double>(*activationDer)(Matrix<double>& Z),MatrixInit init= MatrixInit::ZERO_INIT);
 	int GetOutDim() { return Output_Dim; }
 	int GetInDim() { return Input_Dim; }
 	Matrix<double> ActivationPrime(Matrix<double> Z);
@@ -17,7 +17,7 @@ private:
 	int Input_Dim;
 	Matrix<double> Weights;
 	Matrix<double> Biases;
-	double  (* Activation)(double Z) = nullptr;
-	double  (*ActivationDer)(double Z) = nullptr;
+	Matrix<double> (* Activation)(Matrix<double>& ) = nullptr;
+	Matrix<double> (*ActivationDer)(Matrix<double>& ) = nullptr;
 };
 
