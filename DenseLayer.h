@@ -11,7 +11,7 @@ public:
 	int GetInDim() { return Input_Dim; }
 	Matrix<double> ActivationPrime(Matrix<double> Z);
 	Matrix<double> ApplyActivation(Matrix<double> Z);
-	Matrix<double> Mul(Matrix<double> A);
+	Matrix<double> Mul(Matrix<double>& A);
 private:
 	int Output_Dim;
 	int Input_Dim;

@@ -22,7 +22,7 @@ Matrix<double> DenseLayer::ApplyActivation(Matrix<double> Z)
 	return Z;
 }
 
-Matrix<double> DenseLayer::Mul(Matrix<double> A)
+Matrix<double> DenseLayer::Mul(Matrix<double>& A)
 {
 	Matrix<double> Z = Weights*A + Biases;
 	return Z;

@@ -40,7 +40,7 @@ int main()
 
 
 
-	net.Train(TrainingData, TrainingLabel, 100, 10, 0.4);
+	net.Train(TrainingData, TrainingLabel, 10, 5, 0.3);
 
 	vector<Matrix<double>> TestData;
 	vector<Matrix<double>> TestLabel;

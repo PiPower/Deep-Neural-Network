@@ -62,7 +62,7 @@ public:
 		for (int i = 0; i < Columns * Rows; i++) MatPtr[i] = FcnPtr(MatPtr[i]);
 	}
 	// kopiowanie Matrixy po prawej stronie
-	void operator =(const Matrix rhs)
+	void operator =(const Matrix& rhs)
 	{
 		Columns = rhs.Columns;
 		Rows = rhs.Rows;
@@ -82,7 +82,7 @@ public:
 		return MatPtr[index];
 	}
 
-	void SetValue(unsigned int i, unsigned int j, Type Value)
+	void SetValue(unsigned int i, unsigned int j,const Type& Value)
 	{
 		MatPtr[i * Columns + j] = Value;
 	}

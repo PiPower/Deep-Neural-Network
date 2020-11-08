@@ -48,7 +48,7 @@ void Network::SetCostFun(Matrix<double>(*CostFunc_)(Matrix<double> A, Matrix<dou
 }*/
 
 
-void Network::Train(MatrixD_Array TrainingData, MatrixD_Array TrainingLabels, int BatchSize,int epochs, double LearningRate)
+void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, int BatchSize,int epochs, double LearningRate)
 {
 	assert(TrainingData.size() == TrainingLabels.size() && CostFunc != nullptr && CostFuncDer != nullptr && LearningRate > 0);
 	std::vector<long unsigned int > indexes;
@@ -91,21 +91,22 @@ void Network::Train(MatrixD_Array TrainingData, MatrixD_Array TrainingLabels, in
 			while( i < BatchSize && (i+batch)< TrainingData.size())
 			{
 				
-				std::vector<Matrix<double>> OutputsA;
-				std::vector<Matrix<double>> OutputsZ;
-				OutputsA.resize(Layers.size() + 1);
-				OutputsZ.resize(Layers.size());
+				std::vector<Matrix<double>> ActivationOutput;
+				std::vector<Matrix<double>> Z_Output;
+				ActivationOutput.resize(Layers.size() + 1);
+				Z_Output.resize(Layers.size());
 
-				OutputsA[0] = TrainingData[indexes[i + batch]];
+				ActivationOutput[0] = TrainingData[indexes[i + batch]];
 				int index = 0;
+				// Pushing values through
 				for (auto layer : Layers)
 				{
-					OutputsZ[index] = layer.Mul(OutputsA[index]);
-					OutputsA[index + 1] = layer.ApplyActivation(OutputsZ[index]);
+					Z_Output[index] = layer.Mul(ActivationOutput[index]);
+					ActivationOutput[index + 1] = layer.ApplyActivation(Z_Output[index]);
 					index++;
 				}
                 // ---- Calculating Nabla that will be later devided by batch size element wise 
-				auto DeltaNabla = BackPropagation(OutputsA, OutputsZ, TrainingLabels[indexes[i + batch]]);
+				auto DeltaNabla = BackPropagation(ActivationOutput, Z_Output, TrainingLabels[indexes[i + batch]]);
 
 				for (int i = 0; i < Layers.size(); i++)
 				{
@@ -128,7 +129,7 @@ void Network::Train(MatrixD_Array TrainingData, MatrixD_Array TrainingLabels, in
 	}
 }
 
-std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation( MatrixD_Array& OutputsA, MatrixD_Array& OutputsZ,Matrix<double> label)
+std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation( MatrixD_Array& ActivationOutput, MatrixD_Array& Z_Output,Matrix<double>& label)
 {
 	MatrixD_Array NablaWeight;
 	MatrixD_Array NablaBias;
@@ -136,28 +137,18 @@ std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation( MatrixD_Array&
 	NablaWeight.resize(Layers.size());
 	NablaBias.resize(Layers.size());
 
-	auto zs = Layers[Layers.size() - 1].ActivationPrime(OutputsZ[OutputsZ.size() - 1]);
-	Matrix<double> Delta_L = Hadamard(CostFuncDer(OutputsA[OutputsA.size() - 1],label), zs);
+	auto zs = Layers[Layers.size() - 1].ActivationPrime(Z_Output[Z_Output.size() - 1]);
+	Matrix<double> Delta_L = Hadamard(CostFuncDer(ActivationOutput[ActivationOutput.size() - 1],label), zs);
 
-	NablaWeight[Layers.size() - 1] = Delta_L * OutputsA[OutputsA.size() - 2].Transpose();
+	NablaWeight[Layers.size() - 1] = Delta_L * ActivationOutput[ActivationOutput.size() - 2].Transpose();
 	NablaBias[Layers.size() - 1] = Delta_L;
-
-
-	/*for (int j = 0; j < Layers.size() - 1; j++)
-	{
-		auto sp = Layers[Layers.size() - 2 - j].ActivationPrime(OutputsZ[Layers.size() - 2 - j]);
-		Delta_L = Hadamard(Layers[Layers.size() - 1 - j].Weights.Transpose() * Delta_L, sp );
-		
-		NablaWeight[Layers.size() - 2 - j] = Delta_L * OutputsA[OutputsA.size() - 3 - j].Transpose();
-		NablaBias[Layers.size() - 2 - j] = Delta_L;
-	}*/
 
 	for (int j = 2; j <= Layers.size() ; j++)
 	{
-		auto sp = Layers[Layers.size() - j].ActivationPrime(OutputsZ[Layers.size() -j]);
+		auto sp = Layers[Layers.size() - j].ActivationPrime(Z_Output[Layers.size() -j]);
 		Delta_L = Hadamard(Layers[Layers.size() -  j+1 ].Weights.Transpose() * Delta_L, sp);
 
-		NablaWeight[Layers.size() - j] = Delta_L * OutputsA[OutputsA.size() -j-1].Transpose();
+		NablaWeight[Layers.size() - j] = Delta_L * ActivationOutput[ActivationOutput.size() -j-1].Transpose();
 		NablaBias[Layers.size() - j] = Delta_L;
 	}
 
