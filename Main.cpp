@@ -4,7 +4,9 @@
 #include "Network.h"
 #include <algorithm>
 #include "Mnist_Loader.h"
+#include "NetworkTest.h"
 using namespace std;
+
 
 int main()
 {
@@ -21,8 +23,9 @@ int main()
 	vector<Matrix<double>> TrainingData;
 	vector<Matrix<double>> TrainingLabel;
 
-	mnist_loader mln("Train_Img_Data.idx1-ubyte", "Train_Labels.idx1-ubyte", NumberImg);
+	mnist_loader mln("train-images.idx3-ubyte", "train-labels.idx1-ubyte", NumberImg);
 
+	
 	for (int i = 0;i < NumberImg; i++)
 	{
 		auto img = mln.images(i);
@@ -42,10 +45,11 @@ int main()
 
 	net.Train(TrainingData, TrainingLabel, 10, 5 , 0.3);
 
+
 	vector<Matrix<double>> TestData;
 	vector<Matrix<double>> TestLabel;
 
-	mnist_loader mln2("Train_Img_Data.idx1-ubyte", "Train_Labels.idx1-ubyte", TestImg);
+	mnist_loader mln2("Test_Img_Data.idx1-ubyte", "Test_Labels.idx1-ubyte", TestImg);
 
 	for (int i = 0; i < TestImg; i++)
 	{
@@ -75,4 +79,6 @@ int main()
 
 
 	cout << "Accuracy: "<< counter << "/"<< TestImg;
+
+
 }

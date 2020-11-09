@@ -29,6 +29,9 @@
     <ClCompile Include="Matrix.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Mnist_Loader.cpp">
+      <Filter>Utilities</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Network.h">
@@ -45,6 +48,9 @@
     </ClInclude>
     <ClInclude Include="Mnist_Loader.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="NetworkTest.h">
+      <Filter>Pliki nagłówkowe</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

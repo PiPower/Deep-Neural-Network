@@ -3,6 +3,7 @@
 typedef std::vector< Matrix<double>> MatrixD_Array;
 class Network
 {
+	const double M_E = 2.71828182845904523536;
 public:
 	Network();
 	void AddLayer(DenseLayer layer);

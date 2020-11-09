@@ -15,7 +15,7 @@ public:
 		RANDOM_INIT = 1,
 	};
 public:
-	Matrix( int Columns = 1, int Rows = 1, Init_Type init= Init_Type::ZERO_INIT, double mean=0, double stddev=1.0)
+	Matrix( int Columns = 1, int Rows = 1,Init_Type init= Init_Type::ZERO_INIT , std::mt19937_64* gen = nullptr, std::normal_distribution<double>* unif=nullptr)
 		:
 		Columns(Columns), Rows(Rows)
 	{
@@ -28,10 +28,10 @@ public:
 			break;
 		case Init_Type::RANDOM_INIT:
 		{
-			std::normal_distribution<double> unif(mean, stddev);
-			std::random_device rd;
-			std::mt19937_64 gen(rd());
-			for (int i = 0; i < Rows * Columns; i++) MatPtr[i] = unif(gen);
+			for (int i = 0; i < Rows * Columns; i++)
+			{
+				MatPtr[i] = (*unif)(*gen);
+			}
 		} break;
 		}
 	}
@@ -89,9 +89,9 @@ public:
 		return MatPtr[index];
 	}
 
-	void SetValue(unsigned int i, unsigned int j,const Type& Value)
+	void SetValue(unsigned int y, unsigned int x,const Type& Value)
 	{
-		MatPtr[i * Columns + j] = Value;
+		MatPtr[y * Columns + x] = Value;
 	}
 	// dodawanie Matrixy i zwracanie wyniku w postaci Matrixy
 	Matrix operator+(const Matrix& rhs)
@@ -164,6 +164,10 @@ public:
 		}
 		return *this;
 	}
+	int GetColumns()
+	{
+		return Columns;
+	}
 	Matrix operator++(int)
 	{
 		for (int i = 0; i < Rows * Columns; i++)
@@ -183,7 +187,10 @@ public:
 				{
 					for (int i = 0; i < rhs.Rows; i++)
 					{
-						out[line1 * rhs.Columns + line2] += MatPtr[line1 * Columns + i] * rhs.MatPtr[i * rhs.Columns + line2];
+						auto l1 = MatPtr[line1 * Columns + i];
+						auto l2 = rhs.MatPtr[i * rhs.Columns + line2];
+
+						out[line1 * rhs.Columns + line2] += l1 * l2;
 					}
 				}
 			}
