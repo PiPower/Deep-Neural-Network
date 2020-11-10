@@ -1,24 +1,21 @@
 #include <iostream>
 #include "DenseLayer.h"
-#include "Functions.h"
 #include "Network.h"
 #include <algorithm>
 #include "Mnist_Loader.h"
-#include "NetworkTest.h"
+#include "CostFunction.h"
 using namespace std;
-
 
 int main()
 {
 	int NumberImg = 50000;
 	int TestImg = 10000;
 
-	DenseLayer lel{28*28,30,Sigmoid,DerivativeSigmoid,MatrixInit::RANDOM_INIT };
-	DenseLayer lel3{ 30,10,Sigmoid,DerivativeSigmoid,MatrixInit::RANDOM_INIT };
 	Network net;
-	net.AddLayer(lel);
-	net.AddLayer(lel3);
-	net.SetCostFun(MSE, MSE_Der);
+	net.AddLayer(new DenseLayer{ 28 * 28,64,new Sigmoid(),MatrixInit::RANDOM_INIT });
+	net.AddLayer(new DenseLayer{ 64,32,new Sigmoid(),MatrixInit::RANDOM_INIT });
+	net.AddLayer(new DenseLayer{ 32,10,new Sigmoid(),MatrixInit::RANDOM_INIT });
+	net.SetCostFun(new QuadraticCost());
 	//---------------------
 	vector<Matrix<double>> TrainingData;
 	vector<Matrix<double>> TrainingLabel;

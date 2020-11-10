@@ -1,4 +1,4 @@
-#include <vector>
+/*#include <vector>
 #include "Matrix.h"
 #include <stack>
 #include <fstream>
@@ -197,4 +197,4 @@ public:
 private:
 	vector<Matrix<double>> Weights;
 	vector<Matrix<double>> Biases;
-};
+};*/

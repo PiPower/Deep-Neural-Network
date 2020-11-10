@@ -1,10 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Pliki źródłowe">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
-    </Filter>
     <Filter Include="Pliki nagłówkowe">
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
@@ -15,22 +11,35 @@
     <Filter Include="Utilities">
       <UniqueIdentifier>{d1ab9a83-c5e9-4e13-b8bb-3346044473d0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Activation Functions">
+      <UniqueIdentifier>{95cb4072-de91-4a1d-b69e-5c28e7bcef43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Pliki źródłowe">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
-    <ClCompile Include="Network.cpp">
-      <Filter>Pliki źródłowe</Filter>
-    </ClCompile>
     <ClCompile Include="DenseLayer.cpp">
       <Filter>Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="Mnist_Loader.cpp">
+      <Filter>Utilities</Filter>
     </ClCompile>
     <ClCompile Include="Matrix.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
-    <ClCompile Include="Mnist_Loader.cpp">
-      <Filter>Utilities</Filter>
+    <ClCompile Include="Functions.cpp">
+      <Filter>Activation Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="CostFunction.cpp">
+      <Filter>Activation Functions</Filter>
+    </ClCompile>
+    <ClCompile Include="Network.cpp">
+      <Filter>Pliki nagłówkowe</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,14 +52,14 @@
     <ClInclude Include="DenseLayer.h">
       <Filter>Layers</Filter>
     </ClInclude>
-    <ClInclude Include="Functions.h">
-      <Filter>Utilities</Filter>
-    </ClInclude>
     <ClInclude Include="Mnist_Loader.h">
       <Filter>Utilities</Filter>
     </ClInclude>
-    <ClInclude Include="NetworkTest.h">
-      <Filter>Pliki nagłówkowe</Filter>
+    <ClInclude Include="Functions.h">
+      <Filter>Activation Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="CostFunction.h">
+      <Filter>Activation Functions</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

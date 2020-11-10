@@ -143,19 +143,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="CostFunction.cpp" />
     <ClCompile Include="DenseLayer.cpp" />
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Mnist_Loader.cpp" />
     <ClCompile Include="Network.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CostFunction.h" />
     <ClInclude Include="DenseLayer.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Mnist_Loader.h" />
     <ClInclude Include="Network.h" />
-    <ClInclude Include="NetworkTest.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

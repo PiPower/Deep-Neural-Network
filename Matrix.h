@@ -36,7 +36,7 @@ public:
 		}
 	}
 
-	Matrix<Type> Transpose()
+	Matrix<Type> Transpose() const
 	{
 		Matrix<Type> Transposed(Rows,Columns);
 
@@ -133,7 +133,7 @@ public:
 		return index;
 	}
 	// odejmowanie Matrixy i zwracanie wyniku w postaci Matrixy
-	Matrix operator-(const Matrix& rhs)
+	Matrix operator-(const Matrix& rhs) const
 	{
 		assert(Columns == rhs.Columns && Rows == rhs.Rows);
 		
