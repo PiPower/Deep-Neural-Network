@@ -24,6 +24,24 @@ public:
 	double  SigmoidFunction(double x);
 };
 
+class RELU : public ActivationFunction
+{
+public:
+	RELU() = default;
+
+	Matrix<double> Function(Matrix<double>& Z);
+	Matrix<double> Function_Der(Matrix<double>& Z);
+};
+
+class TanH : public ActivationFunction
+{
+public:
+	TanH() = default;
+	double TanHFunction(double x);
+	Matrix<double> Function(Matrix<double>& Z);
+	Matrix<double> Function_Der(Matrix<double>& Z);
+};
+
 
 
 /*Matrix<double> RELU(Matrix<double>& z)

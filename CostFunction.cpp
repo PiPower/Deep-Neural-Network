@@ -1,4 +1,5 @@
 #include "CostFunction.h"
+#include <limits>
 
 Matrix<double> CostFunction::Function(const Matrix<double>& A, const Matrix<double>& Y)
 {
@@ -24,3 +25,4 @@ Matrix<double> QuadraticCost::Function_Der(const Matrix<double>& A, const Matrix
 {
 	return (A - Y);
 }
+

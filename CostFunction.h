@@ -18,3 +18,4 @@ public:
 	Matrix<double> Function(const Matrix<double>& A, const Matrix<double>& Y);
     Matrix<double> Function_Der(const Matrix<double>& A, const Matrix<double>& Y);
 };
+

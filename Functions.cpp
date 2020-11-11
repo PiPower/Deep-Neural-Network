@@ -38,3 +38,44 @@ Matrix<double> Sigmoid::Function_Der(Matrix<double>& z)
 	}
 	return z;
 }
+
+Matrix<double> RELU::Function(Matrix<double>& Z)
+{
+	for (int i = 0; i < Z.GetRows(); i++)
+	{
+		Z.SetValue(i, 0, std::max(0.0, Z.GetAt(i, 0)));
+	}
+	return Z;
+}
+
+Matrix<double> RELU::Function_Der(Matrix<double>& Z)
+{
+	for (int i = 0; i < Z.GetRows(); i++)
+	{
+		Z.SetValue(i, 0, (Z.GetAt(i, 0) > 0));
+	}
+	return Z;
+}
+
+double TanH::TanHFunction(double x)
+{
+	return (pow(M_E, x) - pow(M_E, -x)) / (pow(M_E, x) + pow(M_E, -x));
+}
+
+Matrix<double> TanH::Function(Matrix<double>& Z)
+{
+	for (int i = 0; i < Z.GetRows(); i++)
+	{
+		Z.SetValue(i, 0, TanHFunction(Z.GetAt(i,0) ));
+	}
+	return Z;
+}
+
+Matrix<double> TanH::Function_Der(Matrix<double>& Z)
+{
+	for (int i = 0; i < Z.GetRows(); i++)
+	{
+		Z.SetValue(i, 0, 1.0-pow(TanHFunction(Z.GetAt(i,0)),2)  );
+	}
+	return Z;
+}

@@ -51,11 +51,11 @@ public:
 		return Transposed;
 	}
 
-	Type GetAt(int i,int j)
+	Type GetAt(int i,int j) const
 	{
 		return MatPtr[i * Columns + j];
 	}
-	int GetRows()
+	int GetRows() const
 	{
 		return Rows;
 	}
@@ -117,10 +117,10 @@ public:
 
 	}
 
-	int GetColumnMaxIndex(int i)
+	int GetColumnMaxIndex(int i) const
 	{
 
-		Type Max = std::numeric_limits<Type>::min();;
+		Type Max = std::numeric_limits<Type>::min();
 		int index = 0;
 		for (int j = 0; j < Rows; j++)
 		{
@@ -164,7 +164,7 @@ public:
 		}
 		return *this;
 	}
-	int GetColumns()
+	int GetColumns() const
 	{
 		return Columns;
 	}

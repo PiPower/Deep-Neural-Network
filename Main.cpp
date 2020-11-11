@@ -8,13 +8,13 @@ using namespace std;
 
 int main()
 {
-	int NumberImg = 50000;
+	int NumberImg = 100;
 	int TestImg = 10000;
 
 	Network net;
-	net.AddLayer(new DenseLayer{ 28 * 28,64,new Sigmoid(),MatrixInit::RANDOM_INIT });
-	net.AddLayer(new DenseLayer{ 64,32,new Sigmoid(),MatrixInit::RANDOM_INIT });
-	net.AddLayer(new DenseLayer{ 32,10,new Sigmoid(),MatrixInit::RANDOM_INIT });
+	net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT });
+	net.AddLayer(new DenseLayer{ 64,32,new RELU(),MatrixInit::RANDOM_INIT });
+	net.AddLayer(new DenseLayer{ 32,10,new TanH(),MatrixInit::RANDOM_INIT });
 	net.SetCostFun(new QuadraticCost());
 	//---------------------
 	vector<Matrix<double>> TrainingData;
