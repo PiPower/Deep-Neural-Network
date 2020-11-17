@@ -97,8 +97,8 @@ void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, 
 			for (int g = 0; g < Layers.size(); g++)
 			{
 				
-				Layers[g]->UpdateWeights( NablaWeights[g] * (-LearningRate)  );
-				Layers[g]->UpdateBiases( NablaBiases[g] * (-LearningRate) );
+				Layers[g]->UpdateWeights( NablaWeights[g] * (-LearningRate/BatchSize)  );
+				Layers[g]->UpdateBiases( NablaBiases[g] * (-LearningRate/BatchSize) );
 			}
 
 		}

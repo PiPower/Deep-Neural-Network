@@ -1,6 +1,6 @@
 #include "DenseLayer.h"
 
-DenseLayer::DenseLayer(int input_dim, int output_dim, ActivationFunction* Func_,MatrixInit init)
+DenseLayer::DenseLayer(int input_dim, int output_dim, ActivationFunction* Func_,MatrixInit init, WeightNormalization W_Init)
 	:
 Output_Dim(output_dim), Input_Dim(input_dim)
 {
@@ -8,6 +8,17 @@ Output_Dim(output_dim), Input_Dim(input_dim)
 	std::random_device rd;
 	std::mt19937_64 gen(rd());
 	Weights = Matrix( input_dim, output_dim, init, &gen, &unif );
+	switch (W_Init)
+	{
+	case WeightNormalization::RoI:
+		Weights = Weights * (1.0 / sqrt(input_dim));
+		break;
+	case WeightNormalization::DoubleRoI:
+		Weights = Weights * (2.0 / sqrt(input_dim));
+		break;
+	default:
+		break;
+	}
 	Biases = Matrix{ 1, output_dim, init, &gen, &unif };
 	Func = Func_;
 }

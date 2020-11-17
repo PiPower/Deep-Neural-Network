@@ -17,16 +17,10 @@ ActivationFunction::~ActivationFunction()
 
 Matrix<double> Sigmoid::Function(Matrix<double>& Z)
 {
-	double mean = 0;
-	for (int i = 0; i < Z.GetRows(); i++)
-	{
-		mean += Z.GetAt(i, 0);
-	}
 
-	mean /= Z.GetRows();
 	for (int i = 0; i < Z.GetRows(); i++)
 	{
-		Z.SetValue(i, 0, SigmoidFunction(Z.GetAt(i, 0)*mean));
+		Z.SetValue(i, 0, SigmoidFunction(Z.GetAt(i, 0)));
 	}
 	return Z;
 }
@@ -38,19 +32,11 @@ double Sigmoid::SigmoidFunction(double x)
 
 Matrix<double> Sigmoid::Function_Der(Matrix<double>& z)
 {
-	double mean = 0;
-	for (int i = 0; i < z.GetRows(); i++)
-	{
-		mean += z.GetAt(i, 0);
-	}
-
-	mean /= z.GetRows();
-
 
 	for (int i = 0; i < z.GetRows(); i++)
 	{
 		auto x = z.GetAt(i, 0);
-		z.SetValue(i, 0, SigmoidFunction(z.GetAt(i, 0)*mean) * (1 - SigmoidFunction(z.GetAt(i, 0)* mean)));
+		z.SetValue(i, 0, SigmoidFunction(z.GetAt(i, 0)) * (1 - SigmoidFunction(z.GetAt(i, 0))));
 	}
 	return z;
 }
@@ -77,7 +63,7 @@ Matrix<double> RELU::Function_Der(Matrix<double>& Z)
 
 double TanH::TanHFunction(double x)
 {
-	return (pow(M_E, x) - pow(M_E, -x)) / (pow(M_E, x) + pow(M_E, -x));
+	return (std::pow(M_E, 2.0*x)-1) / (std::pow(M_E, 2.0*x) + 1);
 }
 
 Matrix<double> TanH::Function(Matrix<double>& Z)
@@ -93,7 +79,7 @@ Matrix<double> TanH::Function_Der(Matrix<double>& Z)
 {
 	for (int i = 0; i < Z.GetRows(); i++)
 	{
-		Z.SetValue(i, 0, 1.0-pow(TanHFunction(Z.GetAt(i,0)),2)  );
+		Z.SetValue(i, 0, 1.0-std::pow(TanHFunction(Z.GetAt(i,0)),2.0)  );
 	}
 	return Z;
 }

@@ -14,9 +14,9 @@ int main()
 	int TestImg = 10000;
 
 	Network net;
-	net.AddLayer(new DenseLayer{ 28 * 28,64,new Sigmoid(),MatrixInit::RANDOM_INIT });
-	net.AddLayer(new DenseLayer{ 64,32,new Sigmoid(),MatrixInit::RANDOM_INIT });
-	net.AddLayer(new DenseLayer{ 32,10,new Sigmoid(),MatrixInit::RANDOM_INIT });
+	net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
+	net.AddLayer(new DenseLayer{ 64,32,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
+	net.AddLayer(new DenseLayer{ 32,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
 	net.SetCostFun(new QuadraticCost());
 	//---------------------
 	vector<Matrix<double>> TrainingData;
@@ -42,7 +42,7 @@ int main()
 
 
 
-	net.Train(TrainingData, TrainingLabel, 10, 3 , 0.3);
+	net.Train(TrainingData, TrainingLabel, 10, 3 , 0.5);
 
 
 	vector<Matrix<double>> TestData;
@@ -74,15 +74,10 @@ int main()
 		{
 			counter++;
 		}
-		if (t[i].GetAt(7, 0) == 1)
-		{
-			cnt++;
-		}
 	}
 
 
 	cout << "Accuracy: "<< counter << "/"<< TestImg<<endl;
-	cout << cnt;
 
 
 }
