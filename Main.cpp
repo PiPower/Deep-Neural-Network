@@ -5,16 +5,18 @@
 #include "Mnist_Loader.h"
 #include "CostFunction.h"
 using namespace std;
+// Other funtions than sigmoid dont work
+
 
 int main()
 {
-	int NumberImg = 100;
+	int NumberImg = 50000;
 	int TestImg = 10000;
 
 	Network net;
-	net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT });
-	net.AddLayer(new DenseLayer{ 64,32,new RELU(),MatrixInit::RANDOM_INIT });
-	net.AddLayer(new DenseLayer{ 32,10,new TanH(),MatrixInit::RANDOM_INIT });
+	net.AddLayer(new DenseLayer{ 28 * 28,64,new Sigmoid(),MatrixInit::RANDOM_INIT });
+	net.AddLayer(new DenseLayer{ 64,32,new Sigmoid(),MatrixInit::RANDOM_INIT });
+	net.AddLayer(new DenseLayer{ 32,10,new Sigmoid(),MatrixInit::RANDOM_INIT });
 	net.SetCostFun(new QuadraticCost());
 	//---------------------
 	vector<Matrix<double>> TrainingData;
@@ -40,7 +42,7 @@ int main()
 
 
 
-	net.Train(TrainingData, TrainingLabel, 10, 5 , 0.3);
+	net.Train(TrainingData, TrainingLabel, 10, 3 , 0.3);
 
 
 	vector<Matrix<double>> TestData;
@@ -65,17 +67,22 @@ int main()
 
 	auto t = net.Predict(TestData);
 	int counter=0;
+	int cnt = 0;
 	for (int i = 0; i < TestImg; i++)
 	{
 		if (t[i].GetColumnMaxIndex(0) == TestLabel[i].GetColumnMaxIndex(0))
 		{
 			counter++;
 		}
-
+		if (t[i].GetAt(7, 0) == 1)
+		{
+			cnt++;
+		}
 	}
 
 
-	cout << "Accuracy: "<< counter << "/"<< TestImg;
+	cout << "Accuracy: "<< counter << "/"<< TestImg<<endl;
+	cout << cnt;
 
 
 }

@@ -61,5 +61,8 @@
     <ClInclude Include="CostFunction.h">
       <Filter>Activation Functions</Filter>
     </ClInclude>
+    <ClInclude Include="Layer.h">
+      <Filter>Layers</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

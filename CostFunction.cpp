@@ -25,4 +25,3 @@ Matrix<double> QuadraticCost::Function_Der(const Matrix<double>& A, const Matrix
 {
 	return (A - Y);
 }
-

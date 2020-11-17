@@ -4,6 +4,7 @@
 
 class DenseLayer
 {
+	
 public:
 	DenseLayer(int input_dim, int output_dim, ActivationFunction* Func_, MatrixInit init = MatrixInit::ZERO_INIT);
 	int GetOutDim() { return Output_Dim; }

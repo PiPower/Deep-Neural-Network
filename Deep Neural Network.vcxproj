@@ -154,6 +154,7 @@
   <ItemGroup>
     <ClInclude Include="CostFunction.h" />
     <ClInclude Include="DenseLayer.h" />
+    <ClInclude Include="Layer.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Mnist_Loader.h" />

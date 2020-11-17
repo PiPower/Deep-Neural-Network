@@ -25,14 +25,14 @@ void DenseLayer::UpdateBiases(const Matrix<double>& Biases_)
 
 Matrix<double> DenseLayer::ActivationPrime(Matrix<double> Z)
 {
-	 Z = Func->Function_Der(Z);
-	 return Z;
+	 auto F = Func->Function_Der(Z);
+	 return F;
 }
 
 Matrix<double> DenseLayer::ApplyActivation(Matrix<double> Z)
 {
-	Z = Func->Function(Z);
-	return Z;
+	auto F  = Func->Function(Z);
+	return F;
 }
 
 Matrix<double> DenseLayer::Mul(Matrix<double>& A)

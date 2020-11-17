@@ -9,7 +9,7 @@ class Network
 public:
 	Network();
 	void AddLayer(DenseLayer* layer);
-	MatrixD_Array Predict(std::vector<Matrix<double>> Input);
+	MatrixD_Array Predict(const std::vector<Matrix<double>>& Input);
 	void SetCostFun(CostFunction* CostFunc_);
 	void Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, int BatchSize,int epochs, double LearningRate );
 	~Network();

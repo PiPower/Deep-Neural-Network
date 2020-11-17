@@ -15,17 +15,19 @@ void Network::AddLayer(DenseLayer* layer)
 	Layers.push_back(layer);
 }
 
-std::vector<Matrix<double>>  Network::Predict(std::vector<Matrix<double>> Input)
+std::vector<Matrix<double>>  Network::Predict(const std::vector<Matrix<double>>& Input)
 {
+	std::vector<Matrix<double>> Predictions;
 	for (int i = 0; i < Input.size(); i++)
 	{
+		Predictions.push_back(Input[i]);
 		for (auto layer : Layers)
 		{
-			Input[i] = layer->Mul(Input[i]);
-			Input[i]= layer->ApplyActivation(Input[i]);
+			Predictions[i] = layer->Mul(Predictions[i]);
+			Predictions[i] = layer->ApplyActivation(Predictions[i]);
 		}
 	}
-	return Input;
+	return Predictions;
 }
 
 void Network::SetCostFun(CostFunction* CostFunc_)
@@ -120,6 +122,7 @@ Network::~Network()
 
 std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation(Matrix<double>& Training_Data,Matrix<double>& label)
 {
+	// typedef vector<Matrix<double>>
 	MatrixD_Array NablaWeight;
 	MatrixD_Array NablaBias;
 
@@ -130,20 +133,20 @@ std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation(Matrix<double>&
 	}
 	
 
-	std::stack<Matrix<double>> ActivationOutput;
-	std::stack<Matrix<double>> Z_Output;
+	std::stack<Matrix<double>> ActivationOutput; // output after activation function 
+	std::stack<Matrix<double>> Z_Output;// output after matrix operation 
 
 	ActivationOutput.push( Training_Data);
 	// Pushing values through
 	for (int index =0 ; index<Layers.size();index++)
 	{
-		Z_Output.push( Layers[index]->Mul(ActivationOutput.top()) );
-		ActivationOutput.push( Layers[index]->ApplyActivation(Z_Output.top() )  );
+		Z_Output.push( Layers[index]->Mul(ActivationOutput.top()) ); // matrix operation w*a+b
+		ActivationOutput.push( Layers[index]->ApplyActivation(Z_Output.top() )  ); // aplaying activation function 
 	}	
 
 	auto zs = Layers[Layers.size() - 1]->ActivationPrime(Z_Output.top());
 	Z_Output.pop();
-	Matrix<double> Delta_L = Hadamard(CostFunc->Function_Der(ActivationOutput.top(),label), zs);
+	Matrix<double> Delta_L = Hadamard(CostFunc->Function_Der(ActivationOutput.top(),label), zs); // Delta of last layer 
 	ActivationOutput.pop();
 
 
@@ -151,6 +154,7 @@ std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation(Matrix<double>&
 	ActivationOutput.pop();
 	NablaBias[Layers.size() - 1] = Delta_L;
 
+	// loop of calculating delta based on earlier delta and setting weights 
 	for (int j = 2; j <= Layers.size() ; j++)
 	{
 		auto sp = Layers[Layers.size() - j]->ActivationPrime(Z_Output.top());

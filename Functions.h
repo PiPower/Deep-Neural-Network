@@ -43,23 +43,15 @@ public:
 };
 
 
+class Softmax : public ActivationFunction
+{
+public:
+	Softmax() = default;
+	Matrix<double> Function(Matrix<double>& Z);
+	Matrix<double> Function_Der(Matrix<double>& Z);
+};
 
-/*Matrix<double> RELU(Matrix<double>& z)
-{
-	for (int i = 0; i < z.GetRows(); i++)
-	{
-		z.SetValue(i,0,std::max(0.0, z.GetAt(i,0)) );
-	}
-	return z;
-}
-Matrix<double> DerivativeRELU(Matrix<double>& z)
-{
-	for (int i = 0; i < z.GetRows(); i++)
-	{
-		z.SetValue(i, 0, ( z.GetAt(i, 0) > 0)  );
-	}
-	return z;
-}
+/*
 
 Matrix<double> Softmax( Matrix<double>& z)
 {
