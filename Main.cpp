@@ -4,19 +4,19 @@
 #include <algorithm>
 #include "Mnist_Loader.h"
 #include "CostFunction.h"
+#include "ConvLayer.h"
 using namespace std;
-// Other funtions than sigmoid dont work
-
 
 int main()
 {
-	int NumberImg = 50000;
+/*	int NumberImg = 10;
 	int TestImg = 10000;
 
 	Network net;
-	net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
-	net.AddLayer(new DenseLayer{ 64,32,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
-	net.AddLayer(new DenseLayer{ 32,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
+	//net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
+	//net.AddLayer(new DenseLayer{ 64,32,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
+	net.AddLayer(new ConvLayer(3, 6, Image_Dim{ 28,28,1 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::DoubleRoI) );
+	net.AddLayer(new DenseLayer{ 32,10,new Softmax(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
 	net.SetCostFun(new QuadraticCost());
 	//---------------------
 	vector<Matrix<double>> TrainingData;
@@ -42,7 +42,7 @@ int main()
 
 
 
-	net.Train(TrainingData, TrainingLabel, 10, 3 , 0.5);
+	net.Train(TrainingData, TrainingLabel, 10, 4 , 0.3);
 
 
 	vector<Matrix<double>> TestData;
@@ -77,7 +77,16 @@ int main()
 	}
 
 
-	cout << "Accuracy: "<< counter << "/"<< TestImg<<endl;
+	cout << "Accuracy: "<< counter << "/"<< TestImg<<endl;*/
 
+	std::normal_distribution<double> unif(0, 1);
+	std::random_device rd;
+	std::mt19937_64 gen(rd());
+	Matrix<double> Img(7, 7, MatrixInit::RANDOM_INIT, &gen, &unif);
+	Matrix<double> ker(3, 3, MatrixInit::RANDOM_INIT, &gen, &unif);
+	Img.ShowValues();
+	ker.ShowValues();
 
+	auto conv = Matrix<double>::Convolution(Img,ker);
+	conv.ShowValues();
 }

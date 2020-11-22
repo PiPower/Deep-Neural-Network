@@ -2,13 +2,15 @@
 #include "DenseLayer.h"
 #include "CostFunction.h"
 
+
 typedef std::vector< Matrix<double>> MatrixD_Array;
+
 class Network
 {
 	const double M_E = 2.71828182845904523536;
 public:
 	Network();
-	void AddLayer(DenseLayer* layer);
+	void AddLayer(BaseLayer* layer);
 	MatrixD_Array Predict(const std::vector<Matrix<double>>& Input);
 	void SetCostFun(CostFunction* CostFunc_);
 	void Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, int BatchSize,int epochs, double LearningRate );
@@ -16,6 +18,6 @@ public:
 private:
 	std::pair<MatrixD_Array, MatrixD_Array> BackPropagation(Matrix<double>& Training_Data, Matrix<double>& label);
 private:
-	std::vector<DenseLayer*> Layers;
+	std::vector<BaseLayer*> Layers;
 	CostFunction* CostFunc = nullptr;
 };

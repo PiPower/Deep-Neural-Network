@@ -41,6 +41,12 @@
     <ClCompile Include="Network.cpp">
       <Filter>Pliki nagłówkowe</Filter>
     </ClCompile>
+    <ClCompile Include="Layer.cpp">
+      <Filter>Layers</Filter>
+    </ClCompile>
+    <ClCompile Include="ConvLayer.cpp">
+      <Filter>Layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Network.h">
@@ -62,6 +68,9 @@
       <Filter>Activation Functions</Filter>
     </ClInclude>
     <ClInclude Include="Layer.h">
+      <Filter>Layers</Filter>
+    </ClInclude>
+    <ClInclude Include="ConvLayer.h">
       <Filter>Layers</Filter>
     </ClInclude>
   </ItemGroup>

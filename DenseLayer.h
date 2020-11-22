@@ -1,17 +1,9 @@
  #pragma once
 #include "Matrix.h"
 #include "Functions.h"
-
-class DenseLayer
+#include "Layer.h"
+class DenseLayer : public BaseLayer
 {
-public:
-	enum class WeightNormalization
-	{
-		None,
-		RoI, // Root of input 
-		DoubleRoI // Double root of input
-	};
-	
 public:
 	DenseLayer(int input_dim, int output_dim, ActivationFunction* Func_, MatrixInit init = MatrixInit::ZERO_INIT, WeightNormalization W_Init= WeightNormalization::None);
 	int GetOutDim() { return Output_Dim; }

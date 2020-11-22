@@ -3,6 +3,7 @@
 #include <vector>
 #include <random>
 #include <iostream>
+#include <fstream>
 
 template <typename Type>
 class Matrix
@@ -20,6 +21,8 @@ public:
 		Columns(Columns), Rows(Rows)
 	{
 		MatPtr.resize(Columns * Rows);
+		std::fstream file("LOL.txt", std::ios::out | std::ios::app);
+
 
 		switch (init)
 		{
@@ -28,12 +31,19 @@ public:
 			break;
 		case Init_Type::RANDOM_INIT:
 		{
-			for (int i = 0; i < Rows * Columns; i++)
+			for (int j = 0; j < Rows;j++)
 			{
-				MatPtr[i] = (*unif)(*gen);
+				for (int i = 0; i < Columns; i++)
+				{
+					MatPtr[j*Columns+i] = (*unif)(*gen);
+					file << MatPtr[j * Columns + i];
+					file << ',';
+				}
+				file << '\n';
 			}
 		} break;
 		}
+		file.close();
 	}
 
 	Matrix<Type> Transpose() const
@@ -234,6 +244,35 @@ public:
 			}
 			std::cout << "|\n";
 		}
+	}
+	static Matrix<Type> Convolution(const Matrix<Type>& Image,const Matrix<Type>& kernel,int Step_Size=1)
+	{
+		//Checks if specified kernel and step size can be used
+		assert( (double)(Image.Columns - kernel.Columns) / Step_Size + 1 == floor((double)(Image.Columns - kernel.Columns) / Step_Size + 1) );
+		assert((double)(Image.Rows - kernel.Rows) / Step_Size + 1 == floor((double)(Image.Rows - kernel.Rows) / Step_Size + 1));
+
+
+		Matrix<Type> Out_Mat((Image.Columns- kernel.Columns)/Step_Size+1, (Image.Rows - kernel.Rows) / Step_Size + 1);
+
+		for (int y = 0; y < Out_Mat.GetRows(); y++)
+		{
+			for (int x = 0; x < Out_Mat.GetColumns(); x++)
+			{
+//-------------------------------------------------------------------
+				double result = 0;
+				for (int y2 = 0; y2 < kernel.Rows; y2++)
+				{
+					for (int x2 = 0; x2 < kernel.Columns; x2++)
+					{
+						result += Image.GetAt(y2 + y, x2 + x) * kernel.GetAt(y2, x2);
+					}
+				}
+//-------------------------------------------------------------------
+				Out_Mat.SetValue(y, x, result);
+			}
+		}
+
+		return Out_Mat;
 	}
 private:
 	std::vector<Type> MatPtr;

@@ -2,12 +2,12 @@
 
 Matrix<double> ActivationFunction::Function(Matrix<double>& Z)
 {
-	return Matrix<double>();
+	return Z;
 }
 
 Matrix<double> ActivationFunction::Function_Der(Matrix<double>& Z)
 {
-	return Matrix<double>();
+	return Z;
 }
 
 ActivationFunction::~ActivationFunction()

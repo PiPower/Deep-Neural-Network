@@ -9,7 +9,7 @@ Network::Network()
 }
 
 
-void Network::AddLayer(DenseLayer* layer)
+void Network::AddLayer(BaseLayer* layer)
 {
 	if(Layers.size() > 0 ) assert(Layers[Layers.size() - 1]->GetOutDim() == layer->GetInDim());
 	Layers.push_back(layer);
