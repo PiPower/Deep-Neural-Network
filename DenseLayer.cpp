@@ -34,21 +34,21 @@ void DenseLayer::UpdateBiases(const Matrix<double>& Biases_)
 	Biases += Biases_;
 }
 
-Matrix<double> DenseLayer::ActivationPrime(Matrix<double> Z)
+std::vector<Matrix<double>> DenseLayer::ActivationPrime(std::vector<Matrix<double>> Z)
 {
-	 auto F = Func->Function_Der(Z);
+	std::vector<Matrix<double>> F{ Func->Function_Der(Z.back()) };
 	 return F;
 }
 
-Matrix<double> DenseLayer::ApplyActivation(Matrix<double> Z)
+std::vector<Matrix<double>> DenseLayer::ApplyActivation(std::vector<Matrix<double>> Z)
 {
-	auto F  = Func->Function(Z);
+	std::vector<Matrix<double>> F{ Func->Function(Z.back()) };
 	return F;
 }
 
-Matrix<double> DenseLayer::Mul(Matrix<double>& A)
+std::vector<Matrix<double>> DenseLayer::Mul(std::vector<Matrix<double>>& A)
 {
-	Matrix<double> Z = Weights*A + Biases;
+	std::vector<Matrix<double>> Z{ Weights * A.back() + Biases };
 	return Z;
 }
 

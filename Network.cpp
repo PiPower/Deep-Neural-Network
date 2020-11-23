@@ -11,21 +11,25 @@ Network::Network()
 
 void Network::AddLayer(BaseLayer* layer)
 {
-	if(Layers.size() > 0 ) assert(Layers[Layers.size() - 1]->GetOutDim() == layer->GetInDim());
+	//if(Layers.size() > 0 ) assert(Layers[Layers.size() - 1]->GetOutDim() == layer->GetInDim());
 	Layers.push_back(layer);
 }
 
 std::vector<Matrix<double>>  Network::Predict(const std::vector<Matrix<double>>& Input)
 {
 	std::vector<Matrix<double>> Predictions;
+	std::vector<Matrix<double>> Buffor;
 	for (int i = 0; i < Input.size(); i++)
 	{
-		Predictions.push_back(Input[i]);
+		std::vector<Matrix<double>> Buffor;
+		Buffor.push_back( Input[i] );
 		for (auto layer : Layers)
 		{
-			Predictions[i] = layer->Mul(Predictions[i]);
-			Predictions[i] = layer->ApplyActivation(Predictions[i]);
+			Buffor = layer->Mul(Buffor) ;
+			Buffor = layer->ApplyActivation(Buffor);
 		}
+
+		Predictions.push_back(Buffor.back());
 	}
 	return Predictions;
 }
@@ -133,10 +137,10 @@ std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation(Matrix<double>&
 	}
 	
 
-	std::stack<Matrix<double>> ActivationOutput; // output after activation function 
-	std::stack<Matrix<double>> Z_Output;// output after matrix operation 
+	std::stack< std::vector<Matrix<double> >> ActivationOutput; // output after activation function 
+	std::stack< std::vector<Matrix<double> >> Z_Output;// output after matrix operation 
 
-	ActivationOutput.push( Training_Data);
+	ActivationOutput.push(vector<Matrix<double>>{Training_Data});
 	// Pushing values through
 	for (int index =0 ; index<Layers.size();index++)
 	{
@@ -146,11 +150,11 @@ std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation(Matrix<double>&
 
 	auto zs = Layers[Layers.size() - 1]->ActivationPrime(Z_Output.top());
 	Z_Output.pop();
-	Matrix<double> Delta_L = Hadamard(CostFunc->Function_Der(ActivationOutput.top(),label), zs); // Delta of last layer 
+	Matrix<double> Delta_L = Hadamard(CostFunc->Function_Der(ActivationOutput.top().front(),label), zs[0]); // Delta of last layer 
 	ActivationOutput.pop();
 
 
-	NablaWeight[Layers.size() - 1] = Delta_L * ActivationOutput.top().Transpose();
+	NablaWeight[Layers.size() - 1] = Delta_L * ActivationOutput.top().front().Transpose();
 	ActivationOutput.pop();
 	NablaBias[Layers.size() - 1] = Delta_L;
 
@@ -159,9 +163,9 @@ std::pair<MatrixD_Array, MatrixD_Array> Network::BackPropagation(Matrix<double>&
 	{
 		auto sp = Layers[Layers.size() - j]->ActivationPrime(Z_Output.top());
 		Z_Output.pop();
-		Delta_L = Hadamard(Layers[Layers.size() -  j+1 ]->GetWeights().Transpose() * Delta_L, sp);
+		Delta_L = Hadamard(Layers[Layers.size() -  j+1 ]->GetWeights().Transpose() * Delta_L, sp[0]);
 
-		NablaWeight[Layers.size() - j] = Delta_L * ActivationOutput.top().Transpose();
+		NablaWeight[Layers.size() - j] = Delta_L * ActivationOutput.top().front().Transpose();
 		ActivationOutput.pop();
 		NablaBias[Layers.size() - j] = Delta_L;
 	}

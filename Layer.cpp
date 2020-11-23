@@ -28,20 +28,6 @@ void BaseLayer::UpdateBiases(const Matrix<double>& Biases_)
 {
 }
 
-Matrix<double> BaseLayer::ActivationPrime(Matrix<double> Z)
-{
-    return Z;
-}
-
-Matrix<double> BaseLayer::ApplyActivation(Matrix<double> Z)
-{
-    return Z;
-}
-
-Matrix<double> BaseLayer::Mul(Matrix<double>& A)
-{
-    return A;
-}
 
 std::vector<Matrix<double>> BaseLayer::ActivationPrime(std::vector<Matrix<double>> Z)
 {

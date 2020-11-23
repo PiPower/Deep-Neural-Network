@@ -41,29 +41,29 @@ Input_Dim(Input_dim),Output_Dim(Output_dim),Func(Func_), img_dim(Image_dim)
 
 }
 
-std::vector<Matrix<double>> ConvLayer::ActivationPrime(std::vector<Images> Z)
+std::vector<Matrix<double>> ConvLayer::ActivationPrime(Images Z)
 {
 	return std::vector<Matrix<double>>();
 }
 
-std::vector<Matrix<double>> ConvLayer::ApplyActivation(std::vector<Images> Z)
+std::vector<Matrix<double>> ConvLayer::ApplyActivation(Images Z)
 {
 	return std::vector<Matrix<double>>();
 }
 
-std::vector<Matrix<double>> ConvLayer::Mul(std::vector<Images>& A)
+std::vector<Matrix<double>> ConvLayer::Mul(Images& A)
 {
-	vector<Images> img;
+	Images img;
+	img.resize(Output_Dim);
 	for (int i = 0; i < Output_Dim;  i++)
 	{
+		img[i] = Matrix<double>(img_dim.Width, img_dim.Height);
 		for (int j = 0; j < Input_Dim; j++)
 		{
-			
-
-
+			img[i] += Matrix<double>::Convolution(A[j], Kernels[i][j]);
 		}
 
 	}
-	return std::vector<Matrix<double>>();
+	return img;
 
 }

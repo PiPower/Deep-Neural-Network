@@ -12,9 +12,9 @@ public:
 	const Matrix<double>& GetBiases() { return Biases; }
 	void UpdateWeights(const Matrix<double>& Weights_);
 	void UpdateBiases(const Matrix<double>& Biases_);
-	Matrix<double> ActivationPrime(Matrix<double> Z);
-	Matrix<double> ApplyActivation(Matrix<double> Z);
-	Matrix<double> Mul(Matrix<double>& A);
+	std::vector<Matrix<double>> ActivationPrime(std::vector<Matrix<double>> Z);
+	std::vector<Matrix<double>> ApplyActivation(std::vector<Matrix<double>> Z);
+	std::vector<Matrix<double>> Mul(std::vector<Matrix<double>>& A);
 	~DenseLayer();
 private:
 	int Output_Dim;
