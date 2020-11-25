@@ -5,6 +5,8 @@
 #include "Mnist_Loader.h"
 #include "CostFunction.h"
 #include "ConvLayer.h"
+
+
 using namespace std;
 
 int main()
@@ -16,7 +18,7 @@ int main()
 	//net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
 	net.AddLayer(new DenseLayer{ 28*28,32,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
 	//net.AddLayer(new ConvLayer(1, 6, Image_Dim{ 28,28 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::DoubleRoI) );
-	net.AddLayer(new DenseLayer{ 32,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
+	net.AddLayer(new DenseLayer{ 32,10,new Softmax(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
 	net.SetCostFun(new QuadraticCost());
 	//---------------------
 	vector<Matrix<double>> TrainingData;
@@ -78,5 +80,4 @@ int main()
 
 
 	cout << "Accuracy: "<< counter << "/"<< TestImg<<endl;
-
 }

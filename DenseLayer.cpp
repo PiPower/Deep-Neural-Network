@@ -19,28 +19,28 @@ Output_Dim(output_dim), Input_Dim(input_dim)
 	default:
 		break;
 	}
-	Biases = Matrix{ 1, output_dim, init, &gen, &unif };
+	Biases = Matrix( 1, output_dim, init, &gen, &unif );
 	Func = Func_;
 }
 
 
-void DenseLayer::UpdateWeights(const Matrix<double>& Weights_)
+void DenseLayer::UpdateWeights(const std::vector<Matrix<double>>& Weights_, const double& Eta)
 {
-	Weights += Weights_;
+	Weights += Weights_[0]* Eta;
 }
 
-void DenseLayer::UpdateBiases(const Matrix<double>& Biases_)
+void DenseLayer::UpdateBiases(const std::vector<Matrix<double>>& Biases_, const double& Eta)
 {
-	Biases += Biases_;
+	Biases += Biases_[0] * Eta;
 }
 
-std::vector<Matrix<double>> DenseLayer::ActivationPrime(std::vector<Matrix<double>> Z)
+std::vector<Matrix<double>> DenseLayer::ActivationPrime(std::vector<Matrix<double>>& Z)
 {
 	std::vector<Matrix<double>> F{ Func->Function_Der(Z.back()) };
 	 return F;
 }
 
-std::vector<Matrix<double>> DenseLayer::ApplyActivation(std::vector<Matrix<double>> Z)
+std::vector<Matrix<double>> DenseLayer::ApplyActivation(std::vector<Matrix<double>>& Z)
 {
 	std::vector<Matrix<double>> F{ Func->Function(Z.back()) };
 	return F;
@@ -50,6 +50,16 @@ std::vector<Matrix<double>> DenseLayer::Mul(std::vector<Matrix<double>>& A)
 {
 	std::vector<Matrix<double>> Z{ Weights * A.back() + Biases };
 	return Z;
+}
+
+std::vector<Matrix<double>> DenseLayer::GetNablaWeight()
+{
+	return std::vector<Matrix<double>>{Matrix<double>(Input_Dim, Output_Dim)};
+}
+
+std::vector<Matrix<double>> DenseLayer::GetNablaBias()
+{
+	return std::vector<Matrix<double>>{Matrix<double>(1, Output_Dim)};
 }
 
 DenseLayer::~DenseLayer()

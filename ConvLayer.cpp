@@ -41,12 +41,12 @@ Input_Dim(Input_dim),Output_Dim(Output_dim),Func(Func_), img_dim(Image_dim)
 
 }
 
-std::vector<Matrix<double>> ConvLayer::ActivationPrime(Images Z)
+std::vector<Matrix<double>> ConvLayer::ActivationPrime(Images& Z)
 {
 	return std::vector<Matrix<double>>();
 }
 
-std::vector<Matrix<double>> ConvLayer::ApplyActivation(Images Z)
+std::vector<Matrix<double>> ConvLayer::ApplyActivation(Images& Z)
 {
 	return std::vector<Matrix<double>>();
 }
@@ -62,7 +62,7 @@ std::vector<Matrix<double>> ConvLayer::Mul(Images& A)
 		{
 			img[i] += Matrix<double>::Convolution(A[j], Kernels[i][j]);
 		}
-
+		img[i] += Bias[i];
 	}
 	return img;
 

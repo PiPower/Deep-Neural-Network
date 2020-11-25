@@ -10,31 +10,31 @@ int BaseLayer::GetInDim()
     return 0;
 }
 
-const Matrix<double>& BaseLayer::GetWeights()
+ Tensor1D BaseLayer::GetWeights()
 {
-    return Matrix<double>();
+    return Tensor1D( Matrix<double>());
 }
 
-const Matrix<double>& BaseLayer::GetBiases()
+ Tensor1D BaseLayer::GetBiases()
 {
-    return Matrix<double>();
+    return Tensor1D(Matrix<double>());
 }
 
-void BaseLayer::UpdateWeights(const Matrix<double>& Weights_)
-{
-}
-
-void BaseLayer::UpdateBiases(const Matrix<double>& Biases_)
+void BaseLayer::UpdateWeights(const std::vector<Matrix<double>>& Weights_, const double& Eta)
 {
 }
 
+void BaseLayer::UpdateBiases(const std::vector<Matrix<double>>& Biases_, const double& Eta)
+{
+}
 
-std::vector<Matrix<double>> BaseLayer::ActivationPrime(std::vector<Matrix<double>> Z)
+
+std::vector<Matrix<double>> BaseLayer::ActivationPrime(std::vector<Matrix<double>>& Z)
 {
     return Z;
 }
 
-std::vector<Matrix<double>> BaseLayer::ApplyActivation(std::vector<Matrix<double>> Z)
+std::vector<Matrix<double>> BaseLayer::ApplyActivation(std::vector<Matrix<double>>& Z)
 {
     return Z;
 }
@@ -42,4 +42,14 @@ std::vector<Matrix<double>> BaseLayer::ApplyActivation(std::vector<Matrix<double
 std::vector<Matrix<double>> BaseLayer::Mul(std::vector<Matrix<double>>& A)
 {
     return A;
+}
+
+std::vector<Matrix<double>> BaseLayer::GetNablaWeight()
+{
+    return std::vector<Matrix<double>>();
+}
+
+std::vector<Matrix<double>> BaseLayer::GetNablaBias()
+{
+    return std::vector<Matrix<double>>();
 }

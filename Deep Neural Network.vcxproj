@@ -152,6 +152,8 @@
     <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Mnist_Loader.cpp" />
     <ClCompile Include="Network.cpp" />
+    <ClCompile Include="Tensor1D.cpp" />
+    <ClCompile Include="Tensor2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConvLayer.h" />
@@ -162,6 +164,8 @@
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Mnist_Loader.h" />
     <ClInclude Include="Network.h" />
+    <ClInclude Include="Tensor1D.h" />
+    <ClInclude Include="Tensor2D.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

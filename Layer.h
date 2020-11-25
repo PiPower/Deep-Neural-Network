@@ -1,6 +1,7 @@
 #pragma once
 #include "Matrix.h"
 #include "Functions.h"
+#include "Tensor1D.h"
 
 class BaseLayer
 {
@@ -16,16 +17,13 @@ protected:
 public:
 	virtual int GetOutDim();
 	virtual int GetInDim();
-	virtual const Matrix<double>& GetWeights();
-	virtual const Matrix<double>& GetBiases();
-	virtual void UpdateWeights(const Matrix<double>& Weights_);
-	virtual void UpdateBiases(const Matrix<double>& Biases_);
-	// --------------------------------------------------------
-	//virtual Matrix<double> ActivationPrime(Matrix<double> Z);
-	//virtual Matrix<double> ApplyActivation(Matrix<double> Z);
-	//virtual Matrix<double> Mul(Matrix<double>& A);
-	// --------------------------------------------------------
-	virtual std::vector<Matrix<double>> ActivationPrime(std::vector<Matrix<double> > Z);
-	virtual std::vector<Matrix<double>> ApplyActivation(std::vector<Matrix<double> > Z);
+	virtual  Tensor1D GetWeights();
+	virtual  Tensor1D GetBiases();
+	virtual void UpdateWeights(const std::vector<Matrix<double>>& Weights_,const double& Eta);
+	virtual void UpdateBiases(const std::vector<Matrix<double>>& Biases_, const double& Eta);
+	virtual std::vector<Matrix<double>> ActivationPrime(std::vector<Matrix<double> >& Z);
+	virtual std::vector<Matrix<double>> ApplyActivation(std::vector<Matrix<double> >& Z);
 	virtual std::vector<Matrix<double>> Mul(std::vector<Matrix<double>>& A);
+	virtual  std::vector<Matrix<double>> GetNablaWeight();
+	virtual  std::vector<Matrix<double>> GetNablaBias();
 };

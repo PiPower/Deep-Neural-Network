@@ -3,7 +3,6 @@
 #include <vector>
 #include <random>
 #include <iostream>
-#include <fstream>
 
 template <typename Type>
 class Matrix
@@ -21,8 +20,6 @@ public:
 		Columns(Columns), Rows(Rows)
 	{
 		MatPtr.resize(Columns * Rows);
-		std::fstream file("LOL.txt", std::ios::out | std::ios::app);
-
 
 		switch (init)
 		{
@@ -36,16 +33,21 @@ public:
 				for (int i = 0; i < Columns; i++)
 				{
 					MatPtr[j*Columns+i] = (*unif)(*gen);
-					file << MatPtr[j * Columns + i];
-					file << ',';
 				}
-				file << '\n';
 			}
 		} break;
 		}
-		file.close();
 	}
 
+	Matrix<Type> ApplyFunction(Type (*Func)(Type))
+	{
+		Matrix<Type> out(Columns, Rows);
+		for (int i = 0; i < Rows * Columns; i++)
+		{
+			out.MatPtr[i] = Func(this->MatPtr[i]);
+		}
+		return out;
+	}
 	Matrix<Type> Transpose() const
 	{
 		Matrix<Type> Transposed(Rows,Columns);
@@ -74,10 +76,7 @@ public:
 		memset(MatPtr.data(), 0, sizeof(double) * Columns * Rows);
 	}
 
-	void ApplyFunction(Type  (* FcnPtr)(Type Z) )
-	{
-		for (int i = 0; i < Columns * Rows; i++) MatPtr[i] = FcnPtr(MatPtr[i]);
-	}
+
 	// kopiowanie Matrixy po prawej stronie
 	void operator =(const Matrix& rhs)
 	{
@@ -85,13 +84,14 @@ public:
 		Rows = rhs.Rows;
 
 		MatPtr.resize(Columns * Rows);
-		for (int y = 0; y < Rows; y++)
+		/*for (int y = 0; y < Rows; y++)
 		{
 			for (int x = 0; x < Columns; x++)
 			{
 				MatPtr[y * Columns + x] = rhs.MatPtr[y * Columns + x];
 			}
-		}
+		}*/
+		memcpy(MatPtr.data(), rhs.MatPtr.data(), Rows * Columns * sizeof(Type));
 	}
 
 	double& operator[](int index)
@@ -186,7 +186,7 @@ public:
 		}
 		return *this;
 	}
-	Matrix operator*(const Matrix& rhs)
+	Matrix operator*(const Matrix& rhs) const
 	{
 		assert(Columns == rhs.Rows);
 	
@@ -208,7 +208,7 @@ public:
 		
 	}
 
-	Matrix<Type> operator*(const double& number)
+	Matrix<Type> operator*(const double& number) const
 	{
 		Matrix<double> out(Columns, Rows);
 

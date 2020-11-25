@@ -14,8 +14,8 @@ class ConvLayer : public BaseLayer
 {
 public:
 	ConvLayer(int Input_dim, int Output_dim, Image_Dim Image_dim, ActivationFunction* Func_, MatrixInit init = MatrixInit::ZERO_INIT, WeightNormalization W_Init = WeightNormalization::None);
-	std::vector<Matrix<double>> ActivationPrime(Images Z) override;
-	std::vector<Matrix<double>> ApplyActivation(Images Z) override;
+	std::vector<Matrix<double>> ActivationPrime(Images& Z) override;
+	std::vector<Matrix<double>> ApplyActivation(Images& Z) override;
     std::vector<Matrix<double>> Mul(Images& A) override;
 private:
 	int Output_Dim;
