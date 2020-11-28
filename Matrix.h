@@ -84,14 +84,23 @@ public:
 		Rows = rhs.Rows;
 
 		MatPtr.resize(Columns * Rows);
-		/*for (int y = 0; y < Rows; y++)
-		{
-			for (int x = 0; x < Columns; x++)
-			{
-				MatPtr[y * Columns + x] = rhs.MatPtr[y * Columns + x];
-			}
-		}*/
 		memcpy(MatPtr.data(), rhs.MatPtr.data(), Rows * Columns * sizeof(Type));
+	}
+
+	// To make this function work all matrices MUST have te same number of columns and rows
+	static Matrix<double> CopyFromVector( std::vector<Matrix<Type>>& List)
+	{
+		int nrRows = List[0].GetRows();
+		int nrColumns = List[0].GetColumns();
+
+		Matrix<double> Out(1, nrRows * nrColumns * List.size());
+		for (int i = 0; i < List.size(); i++)
+		{
+			int index = List[0].Rows * List[0].Columns * i;
+			memcpy(&Out.MatPtr[index], List[i].MatPtr.data() , sizeof(Type) * nrRows * nrColumns);
+		}
+		//memcpy(MatPtr.data(), Pointer, sizeof(Type) * List[0].Rows * List[0].Columns* List.size());
+		return Out;
 	}
 
 	double& operator[](int index)
@@ -124,6 +133,16 @@ public:
 			{
 				MatPtr[i] += rhs.MatPtr[i];
 			}
+
+	}
+
+	void operator+=(const double& rhs)
+	{
+
+		for (int i = 0; i < Rows * Columns; i++)
+		{
+			MatPtr[i] += rhs;
+		}
 
 	}
 
@@ -208,6 +227,23 @@ public:
 		
 	}
 
+	std::vector<Matrix<double>> ReshapeFlatMatrix(int nrColumns, int nrRows)
+	{
+		int MatrixCount = (Columns * Rows) / (nrColumns * nrRows);
+		assert((double)(Columns * Rows) / (double)(nrColumns * nrRows) == MatrixCount);
+
+		std::vector<Matrix<double>> out;
+		out.resize(MatrixCount);
+		for (int i = 0; i < MatrixCount; i++)
+		{
+			out[i].MatPtr.resize(nrColumns * nrRows);
+			out[i].Columns = nrColumns;
+			out[i].Rows = nrRows;
+			memcpy(out[i].MatPtr.data(), &MatPtr.data()[i * nrColumns * nrRows], nrColumns * nrRows * sizeof(Type));
+		}
+
+		return out;
+	}
 	Matrix<Type> operator*(const double& number) const
 	{
 		Matrix<double> out(Columns, Rows);

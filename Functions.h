@@ -9,8 +9,8 @@ class ActivationFunction
 protected:
 	ActivationFunction() = default;
 public:
-	virtual Matrix<double> Function(Matrix<double>& Z);
-	virtual Matrix<double> Function_Der(Matrix<double>& Z);
+	virtual Matrix<double> Function(Matrix<double> Z);
+	virtual Matrix<double> Function_Der(Matrix<double> Z);
 	virtual ~ActivationFunction();
 };
 
@@ -19,8 +19,8 @@ class Sigmoid : public ActivationFunction
 public:
 	Sigmoid() = default;
 
-	Matrix<double> Function(Matrix<double>& Z);
-	Matrix<double> Function_Der(Matrix<double>& Z);
+	Matrix<double> Function(Matrix<double> Z);
+	Matrix<double> Function_Der(Matrix<double> Z);
 	double  SigmoidFunction(double x);
 };
 
@@ -29,8 +29,8 @@ class RELU : public ActivationFunction
 public:
 	RELU() = default;
 
-	Matrix<double> Function(Matrix<double>& Z);
-	Matrix<double> Function_Der(Matrix<double>& Z);
+	Matrix<double> Function(Matrix<double> Z);
+	Matrix<double> Function_Der(Matrix<double> Z);
 };
 
 class TanH : public ActivationFunction
@@ -38,8 +38,8 @@ class TanH : public ActivationFunction
 public:
 	TanH() = default;
 	double TanHFunction(double x);
-	Matrix<double> Function(Matrix<double>& Z);
-	Matrix<double> Function_Der(Matrix<double>& Z);
+	Matrix<double> Function(Matrix<double> Z);
+	Matrix<double> Function_Der(Matrix<double> Z);
 };
 
 
@@ -47,13 +47,13 @@ class Softmax : public ActivationFunction
 {
 public:
 	Softmax() = default;
-	Matrix<double> Function(Matrix<double>& Z);
-	Matrix<double> Function_Der(Matrix<double>& Z);
+	Matrix<double> Function(Matrix<double> Z);
+	Matrix<double> Function_Der(Matrix<double> Z);
 };
 
 /*
 
-Matrix<double> Softmax( Matrix<double>& z)
+Matrix<double> Softmax( Matrix<double> z)
 {
 	double denominator = 0;
 	for (int i = 0; i < z.GetRows(); i++)
@@ -68,7 +68,7 @@ Matrix<double> Softmax( Matrix<double>& z)
 	return z;
 }
 
-Matrix<double> DerivativeSoftmax(Matrix<double>& z)
+Matrix<double> DerivativeSoftmax(Matrix<double> z)
 {
 	double denominator = 0;
 	for (int i = 0; i < z.GetRows(); i++)

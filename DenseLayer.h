@@ -17,6 +17,8 @@ public:
 	std::vector<Matrix<double>> Mul(std::vector<Matrix<double>>& A);
 	std::vector<Matrix<double>> GetNablaWeight();
 	std::vector<Matrix<double>> GetNablaBias();
+	Tensor1D CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation);
+	Tensor1D CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation);
 	~DenseLayer();
 private:
 	int Output_Dim;

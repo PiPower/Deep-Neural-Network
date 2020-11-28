@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <iostream>
 #include <stack>
+#include "Flatern.h"
 using namespace std;
 
 
@@ -66,6 +67,17 @@ void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, 
 	std::mt19937 g(rd());
 
 
+
+	Tensor2D NablaWeights;
+	Tensor2D NablaBiases;
+
+	for (int i = 0; i < Layers.size(); i++)
+	{
+		NablaWeights.Append(Layers[i]->GetNablaWeight());
+		NablaBiases.Append(Layers[i]->GetNablaBias());
+	}
+
+
 	//---- Epoch iterating
 	for (int i = 0; i < epochs; i++)
 	{
@@ -75,14 +87,8 @@ void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, 
 		// Batch iterating 
 		for (int batch = 0; batch < TrainingData.size(); batch = batch + BatchSize)
 		{
-			Tensor2D NablaWeights;
-			Tensor2D NablaBiases;
-
-			for (int i = 0; i < Layers.size(); i++)
-			{
-				NablaWeights.Append(Layers[i]->GetNablaWeight() );
-				NablaBiases.Append(Layers[i]->GetNablaBias());
-			}
+			NablaWeights.Clear();
+			NablaBiases.Clear();
 
 			int i = 0;
 			//Per Batch iterating
@@ -127,17 +133,7 @@ Network::~Network()
 std::pair<Tensor2D, Tensor2D > Network::BackPropagation(Matrix<double>& Training_Data,Matrix<double>& label)
 {
 
-	// typedef vector<Matrix<double>>
-	Tensor2D NablaWeight;
-	Tensor2D NablaBias;
-
-	for (int i = 0; i < Layers.size(); i++)
-	{
-		NablaWeight.Append(Layers[i]->GetNablaWeight());
-		NablaBias.Append(Layers[i]->GetNablaBias());
-	}
-	
-
+   //---------------------- Forward Pass
 	std::stack<Tensor1D> ActivationOutput; // output after activation function 
 	std::stack<Tensor1D> Z_Output;// output after matrix operation 
 
@@ -149,6 +145,17 @@ std::pair<Tensor2D, Tensor2D > Network::BackPropagation(Matrix<double>& Training
 		ActivationOutput.push( Layers[index]->ApplyActivation(Z_Output.top().GetTensor() )  ); // aplaying activation function 
 	}	
 
+	//-------------------------------- Creation of gradient
+	Tensor2D NablaWeight;
+	Tensor2D NablaBias;
+
+	for (int i = 0; i < Layers.size(); i++)
+	{
+		NablaWeight.Append(Layers[i]->GetNablaWeight());
+		NablaBias.Append(Layers[i]->GetNablaBias());
+	}
+
+	//------------------------------ Calculating gradient
 	auto zs = Layers[Layers.size() - 1]->ActivationPrime(Z_Output.top().GetTensor());
 
 	Tensor1D Derr{ CostFunc->Function_Der(ActivationOutput.top().GetTensor()[0],label) };
@@ -172,14 +179,26 @@ std::pair<Tensor2D, Tensor2D > Network::BackPropagation(Matrix<double>& Training
 		Tensor1D Weights = Layers[Layers.size() - j + 1]->GetWeights();
 		Weights.Transpose();
 
-		Delta_L = Tensor1D::Tensor1DHadamard(Weights*Delta_L , sp);
+		if (dynamic_cast<Flatern*>(Layers[Layers.size() - j]))
+		{
+			Delta_L = Tensor1D::Tensor1DHadamard(Weights * Delta_L, sp);
+			auto NablaTensor = NablaWeight[Layers.size() - j].GetTensor()[0];
+			NablaWeight[Layers.size() - j] = Tensor1D();
+			NablaBias[Layers.size() - j] = Tensor1D();
+			Delta_L = Delta_L.ReshapeFlat(NablaTensor.GetColumns(), NablaTensor.GetRows());
+			ActivationOutput.pop();
+		}
+		else
+		{
+			if(! dynamic_cast<Flatern*>(Layers[Layers.size() - j+1])) Delta_L = Tensor1D::Tensor1DHadamard(Weights * Delta_L, sp);
 
-		Activation = ActivationOutput.top();
-		Activation.Transpose();
+			Activation = ActivationOutput.top();
+			Activation.Transpose();
 
-		NablaWeight[Layers.size() - j] = Delta_L * Activation;
-		ActivationOutput.pop();
-		NablaBias[Layers.size() - j] = Delta_L;
+			NablaWeight[Layers.size() - j] = Layers[Layers.size() - j]->CalculateNablaWeight(Delta_L ,Activation);
+			ActivationOutput.pop();
+			NablaBias[Layers.size() - j] = Layers[Layers.size() - j]->CalculateNablaBias(Delta_L, Activation);
+		}
 	}
 
 	return make_pair(NablaWeight, NablaBias);

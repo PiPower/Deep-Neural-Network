@@ -55,6 +55,14 @@ Tensor1D& Tensor2D::operator[](int i)
 	return Tensor[i];
 }
 
+void Tensor2D::Clear()
+{
+	for (auto& tensor_ : Tensor)
+	{
+		tensor_.Clear();
+	}
+}
+
 void Tensor2D::TransposeAt(unsigned int index)
 {
 	Tensor[index].Transpose();

@@ -146,6 +146,7 @@
     <ClCompile Include="ConvLayer.cpp" />
     <ClCompile Include="CostFunction.cpp" />
     <ClCompile Include="DenseLayer.cpp" />
+    <ClCompile Include="Flatern.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="Layer.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="ConvLayer.h" />
     <ClInclude Include="CostFunction.h" />
     <ClInclude Include="DenseLayer.h" />
+    <ClInclude Include="Flatern.h" />
     <ClInclude Include="Layer.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Functions.h" />

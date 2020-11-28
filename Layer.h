@@ -26,4 +26,6 @@ public:
 	virtual std::vector<Matrix<double>> Mul(std::vector<Matrix<double>>& A);
 	virtual  std::vector<Matrix<double>> GetNablaWeight();
 	virtual  std::vector<Matrix<double>> GetNablaBias();
+	virtual Tensor1D CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation);
+	virtual Tensor1D CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation);
 };

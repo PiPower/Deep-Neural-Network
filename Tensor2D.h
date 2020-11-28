@@ -12,6 +12,7 @@ public:
 	Tensor2D operator*(const Tensor2D& rhs);
 	Tensor2D operator+(const Tensor2D& rhs);
 	Tensor1D& operator[](int i);
+	void Clear();
 	void TransposeAt(unsigned int index);
 	unsigned int GetSize();
 

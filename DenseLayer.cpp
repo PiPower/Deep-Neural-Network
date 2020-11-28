@@ -62,6 +62,16 @@ std::vector<Matrix<double>> DenseLayer::GetNablaBias()
 	return std::vector<Matrix<double>>{Matrix<double>(1, Output_Dim)};
 }
 
+Tensor1D DenseLayer::CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation)
+{
+	return Delta*Activation;
+}
+
+Tensor1D DenseLayer::CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation)
+{
+	return Delta;
+}
+
 DenseLayer::~DenseLayer()
 {
 	if (Func != nullptr)

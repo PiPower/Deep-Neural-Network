@@ -53,3 +53,15 @@ std::vector<Matrix<double>> BaseLayer::GetNablaBias()
 {
     return std::vector<Matrix<double>>();
 }
+
+Tensor1D BaseLayer::CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation)
+{
+    return Tensor1D();
+}
+
+Tensor1D BaseLayer::CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation)
+{
+    return Tensor1D();
+}
+
+

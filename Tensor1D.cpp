@@ -25,7 +25,7 @@ std::vector<Matrix<double>>& Tensor1D::GetTensor()
 
 
 
-Tensor1D Tensor1D::operator*(const Tensor1D& rhs)
+Tensor1D Tensor1D::operator*(const Tensor1D& rhs) const
 {
 	assert(Tensor.size() == rhs.Tensor.size());
 	Tensor1D out;
@@ -54,6 +54,14 @@ std::vector<Matrix<double>>& Tensor1D::operator[](int i)
 	return Tensor;
 }
 
+// Flat means that the tensor is 1 dim with matrix(1,n) or matrix(n,1)
+Tensor1D Tensor1D::ReshapeFlat(int nrColumns, int nrRows)
+{
+	assert(Tensor.size()==1);
+	Tensor1D out ( Tensor[0].ReshapeFlatMatrix(nrColumns, nrRows));
+	return out;
+}
+
 void Tensor1D::Transpose()
 {
 	for (int i = 0; i < Tensor.size(); i++)
@@ -62,7 +70,28 @@ void Tensor1D::Transpose()
 	}
 }
 
-unsigned int Tensor1D::GetSize()
+void Tensor1D::Clear()
+{
+	for (int i = 0; i < Tensor.size(); i++)
+	{
+		Tensor[i].Clear();
+	}
+}
+
+Tensor1D Tensor1D::Convolution(const Tensor1D& Img, const Tensor1D& Kernel)
+{
+	Tensor1D out;
+	assert(Img.Tensor.size() >0 && Kernel.Tensor.size() > 0);
+	out.Tensor.resize(Kernel.Tensor.size());
+	for (int i = 0; i < Kernel.Tensor.size(); i++)
+	{
+		out.Tensor[i] = Matrix<double>::Convolution(Img.Tensor[0], Kernel.Tensor[i]);
+	}
+
+	return out;
+}
+
+unsigned int Tensor1D::GetSize() const
 {
 	return Tensor.size();
 }

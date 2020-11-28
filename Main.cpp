@@ -5,20 +5,22 @@
 #include "Mnist_Loader.h"
 #include "CostFunction.h"
 #include "ConvLayer.h"
+#include "Flatern.h"
 
 
 using namespace std;
 
 int main()
 {
-	int NumberImg = 50000;
+	int NumberImg = 25000;
 	int TestImg = 10000;
 
 	Network net;
 	//net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
-	net.AddLayer(new DenseLayer{ 28*28,32,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
-	//net.AddLayer(new ConvLayer(1, 6, Image_Dim{ 28,28 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::DoubleRoI) );
-	net.AddLayer(new DenseLayer{ 32,10,new Softmax(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
+	//net.AddLayer(new DenseLayer{ 28*28,32,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
+	net.AddLayer(new ConvLayer(1, 3, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::DoubleRoI) );
+	net.AddLayer(new Flatern());
+	net.AddLayer(new DenseLayer{ 1728,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
 	net.SetCostFun(new QuadraticCost());
 	//---------------------
 	vector<Matrix<double>> TrainingData;
@@ -30,7 +32,7 @@ int main()
 	for (int i = 0;i < NumberImg; i++)
 	{
 		auto img = mln.images(i);
-		Matrix<double> ImgMat(1, 28*28);
+		Matrix<double> ImgMat(28,28);
 		for (int j = 0; j < 28 * 28; j++)
 		{
 			ImgMat[j] = img[j];
@@ -44,7 +46,7 @@ int main()
 
 
 
-	net.Train(TrainingData, TrainingLabel, 10, 4 , 0.3);
+	net.Train(TrainingData, TrainingLabel, 10, 5 , 0.3);
 
 
 	vector<Matrix<double>> TestData;
@@ -55,7 +57,7 @@ int main()
 	for (int i = 0; i < TestImg; i++)
 	{
 		auto img = mln2.images(i);
-		Matrix<double> ImgMat(1, 28 * 28);
+		Matrix<double> ImgMat(28, 28);
 		for (int j = 0; j < 28 * 28; j++)
 		{
 			ImgMat[j] = img[j];

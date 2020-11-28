@@ -53,6 +53,9 @@
     <ClCompile Include="Tensor1D.cpp">
       <Filter>Utilities</Filter>
     </ClCompile>
+    <ClCompile Include="Flatern.cpp">
+      <Filter>Layers</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Network.h">
@@ -84,6 +87,9 @@
     </ClInclude>
     <ClInclude Include="Tensor1D.h">
       <Filter>Utilities</Filter>
+    </ClInclude>
+    <ClInclude Include="Flatern.h">
+      <Filter>Layers</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
