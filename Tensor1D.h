@@ -5,10 +5,10 @@
 class Tensor1D
 {
 	public:
-		Tensor1D(std::vector<Matrix<double>> original);
-		Tensor1D(Matrix<double> original);
+		Tensor1D(const std::vector<Matrix<double>>& original);
+		Tensor1D(const Matrix<double>& original);
 		Tensor1D();
-		void Append(const Matrix<double> matrix);
+		void Append(const Matrix<double>& matrix);
 		std::vector<Matrix<double>>& GetTensor();
 		Tensor1D operator*(const Tensor1D& rhs) const;
 		static Tensor1D  Tensor1DHadamard(const Tensor1D& Lhs, const Tensor1D& Rhs);
@@ -18,8 +18,8 @@ class Tensor1D
 		void Clear();
 		static Tensor1D Convolution(const Tensor1D& Lhs, const Tensor1D& Rhs);
 		unsigned int GetSize() const;
-		void operator=(const Tensor1D source);
-		Tensor1D operator+(const Tensor1D source);
+		void operator=(const Tensor1D& source);
+		Tensor1D operator+(const Tensor1D& source);
 	private:
 		std::vector<Matrix<double>>  Tensor;
 };

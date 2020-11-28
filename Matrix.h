@@ -73,7 +73,7 @@ public:
 	}
 	void Clear()
 	{
-		memset(MatPtr.data(), 0, sizeof(double) * Columns * Rows);
+		memset(MatPtr.data(), 0, sizeof(Type) * Columns * Rows);
 	}
 
 

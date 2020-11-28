@@ -1,10 +1,10 @@
 #include "Tensor1D.h"
-Tensor1D::Tensor1D(std::vector<Matrix<double>> original)
+Tensor1D::Tensor1D(const std::vector<Matrix<double>>& original)
 {
 	Tensor = original;
 }
 
-Tensor1D::Tensor1D(Matrix<double> original)
+Tensor1D::Tensor1D(const Matrix<double>& original)
 {
 	Tensor.push_back(original);
 }
@@ -13,7 +13,7 @@ Tensor1D::Tensor1D()
 {
 }
 
-void Tensor1D::Append(const Matrix<double> matrix)
+void Tensor1D::Append(const Matrix<double>& matrix)
 {
 	Tensor.push_back(matrix);
 }
@@ -22,8 +22,6 @@ std::vector<Matrix<double>>& Tensor1D::GetTensor()
 {
 	return Tensor; 
 }
-
-
 
 Tensor1D Tensor1D::operator*(const Tensor1D& rhs) const
 {
@@ -58,7 +56,8 @@ std::vector<Matrix<double>>& Tensor1D::operator[](int i)
 Tensor1D Tensor1D::ReshapeFlat(int nrColumns, int nrRows)
 {
 	assert(Tensor.size()==1);
-	Tensor1D out ( Tensor[0].ReshapeFlatMatrix(nrColumns, nrRows));
+	auto res = Tensor[0].ReshapeFlatMatrix(nrColumns, nrRows);
+	Tensor1D out ( res);
 	return out;
 }
 
@@ -96,12 +95,13 @@ unsigned int Tensor1D::GetSize() const
 	return Tensor.size();
 }
 
-void Tensor1D::operator=(const Tensor1D source)
+void Tensor1D::operator=(const Tensor1D& source)
 {
+	Tensor.clear();
 	Tensor = source.Tensor;
 }
 
-Tensor1D Tensor1D::operator+(const Tensor1D source)
+Tensor1D Tensor1D::operator+(const Tensor1D& source)
 {
 	assert(Tensor.size() == source.Tensor.size());
 	Tensor1D out;

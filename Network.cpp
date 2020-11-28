@@ -3,8 +3,9 @@
 #include <iostream>
 #include <stack>
 #include "Flatern.h"
-using namespace std;
+#include <thread>
 
+using namespace std;
 
 
 Network::Network()
@@ -67,7 +68,6 @@ void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, 
 	std::mt19937 g(rd());
 
 
-
 	Tensor2D NablaWeights;
 	Tensor2D NablaBiases;
 
@@ -87,6 +87,8 @@ void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, 
 		// Batch iterating 
 		for (int batch = 0; batch < TrainingData.size(); batch = batch + BatchSize)
 		{
+			cout << batch << endl;
+
 			NablaWeights.Clear();
 			NablaBiases.Clear();
 

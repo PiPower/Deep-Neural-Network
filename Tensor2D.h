@@ -4,10 +4,10 @@
 class Tensor2D
 {
 public:
-	Tensor2D(const std::vector<std::vector<Matrix<double>>> original);
+	Tensor2D(const std::vector<std::vector<Matrix<double>>>& original);
 	Tensor2D();
-	void Append(const Matrix<double> matrix);
-	void Append(const std::vector<Matrix<double>> MatrixList);
+	void Append(const Matrix<double>& matrix);
+	void Append(const std::vector<Matrix<double>>& MatrixList);
 	std::vector<Tensor1D > GetTensor() { return Tensor; }
 	Tensor2D operator*(const Tensor2D& rhs);
 	Tensor2D operator+(const Tensor2D& rhs);
