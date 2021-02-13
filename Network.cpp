@@ -106,6 +106,7 @@ void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, 
 				i++;
 			}
 
+			int x = 0;
 			for (int g = 0; g < Layers.size(); g++)
 			{
 				
@@ -134,13 +135,13 @@ Network::~Network()
 
 std::pair<Tensor2D, Tensor2D > Network::BackPropagation(Matrix<double>& Training_Data,Matrix<double>& label)
 {
-
-   //---------------------- Forward Pass
 	std::stack<Tensor1D> ActivationOutput; // output after activation function 
 	std::stack<Tensor1D> Z_Output;// output after matrix operation 
 
+
+	//---------------------- Forward Pass
 	ActivationOutput.push( vector<Matrix<double>>{Training_Data} );
-	// Pushing values through
+	
 	for (int index =0 ; index<Layers.size();index++)
 	{
 		Z_Output.push( Layers[index]->Mul(ActivationOutput.top().GetTensor() ) ); // matrix operation w*a+b
@@ -176,13 +177,15 @@ std::pair<Tensor2D, Tensor2D > Network::BackPropagation(Matrix<double>& Training
 	// loop of calculating delta based on earlier delta and setting weights 
 	for (int j = 2; j <= Layers.size() ; j++)
 	{
-		Tensor1D sp = Layers[Layers.size() - j]->ActivationPrime(Z_Output.top().GetTensor());
-		Z_Output.pop();
-		Tensor1D Weights = Layers[Layers.size() - j + 1]->GetWeights();
-		Weights.Transpose();
-
+		// ----------- gradient for Flatern 
 		if (dynamic_cast<Flatern*>(Layers[Layers.size() - j]))
 		{
+			Tensor1D sp = Layers[Layers.size() - j]->ActivationPrime(Z_Output.top().GetTensor());
+			Z_Output.pop();
+			Tensor1D Weights = Layers[Layers.size() - j + 1]->GetWeights();
+			Weights.Transpose();
+
+
 			Delta_L = Tensor1D::Tensor1DHadamard(Weights * Delta_L, sp);
 			auto NablaTensor = NablaWeight[Layers.size() - j].GetTensor()[0];
 			NablaWeight[Layers.size() - j] = Tensor1D();
@@ -190,14 +193,44 @@ std::pair<Tensor2D, Tensor2D > Network::BackPropagation(Matrix<double>& Training
 			Delta_L = Delta_L.ReshapeFlat(NablaTensor.GetColumns(), NablaTensor.GetRows());
 			ActivationOutput.pop();
 		}
-		else
+		// ----------- gradient for Dense 
+		if (dynamic_cast<DenseLayer*>(Layers[Layers.size() - j]))
 		{
-			if(! dynamic_cast<Flatern*>(Layers[Layers.size() - j+1])) Delta_L = Tensor1D::Tensor1DHadamard(Weights * Delta_L, sp);
+			Tensor1D sp = Layers[Layers.size() - j]->ActivationPrime(Z_Output.top().GetTensor());
+			Z_Output.pop();
+			Tensor1D Weights = Layers[Layers.size() - j + 1]->GetWeights();
+			Weights.Transpose();
 
+			Delta_L = Tensor1D::Tensor1DHadamard(Weights * Delta_L, sp);
 			Activation = ActivationOutput.top();
 			Activation.Transpose();
 
 			NablaWeight[Layers.size() - j] = Layers[Layers.size() - j]->CalculateNablaWeight(Delta_L ,Activation);
+			ActivationOutput.pop();
+			NablaBias[Layers.size() - j] = Layers[Layers.size() - j]->CalculateNablaBias(Delta_L, Activation);
+		}
+		// ----------- gradient for Conv 
+		if (dynamic_cast<ConvLayer*>(Layers[Layers.size() - j]))
+		{
+
+			Tensor1D sp = Layers[Layers.size() - j]->ActivationPrime(Z_Output.top().GetTensor());
+			Z_Output.pop();
+			Tensor1D Weights = Layers[Layers.size() - j + 1]->GetWeights();
+			Weights.Transpose();
+
+			/*if (!dynamic_cast<Flatern*>(Layers[Layers.size() - j + 1]))
+			{
+				Delta_L = Tensor1D::Tensor1DHadamard(Weights * Delta_L, sp);
+			}*/
+
+			if (dynamic_cast<ConvLayer*>(Layers[Layers.size() - j + 1]))
+			{
+				Delta_L = Tensor1D::Tensor1DHadamard(Weights * Delta_L, sp);
+			}
+
+			Activation = ActivationOutput.top();
+
+			NablaWeight[Layers.size() - j] = Layers[Layers.size() - j]->CalculateNablaWeight(Delta_L, Activation);
 			ActivationOutput.pop();
 			NablaBias[Layers.size() - j] = Layers[Layers.size() - j]->CalculateNablaBias(Delta_L, Activation);
 		}

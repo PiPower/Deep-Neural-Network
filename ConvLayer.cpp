@@ -116,8 +116,6 @@ std::vector<Matrix<double>> ConvLayer::GetNablaBias()
 
 Tensor1D ConvLayer::CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation)
 {
-	Tensor1D out;
-	
 	return Tensor1D::Convolution(Activation, Delta);
 }
 

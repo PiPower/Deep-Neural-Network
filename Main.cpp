@@ -12,15 +12,16 @@ using namespace std;
 
 int main()
 {
-	int NumberImg = 5000;
+	int NumberImg = 60000;
 	int TestImg = 10000;
 
 	Network net;
 	//net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
 	//net.AddLayer(new DenseLayer{ 28*28,32,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
-	net.AddLayer(new ConvLayer(1, 2, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::DoubleRoI) );
+	//net.AddLayer(new ConvLayer(1, 1, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::DoubleRoI) );
+	net.AddLayer(new ConvLayer(1, 2, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::DoubleRoI));
 	net.AddLayer(new Flatern());
-	net.AddLayer(new DenseLayer{ 1152,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
+	net.AddLayer(new DenseLayer{ 1152,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI }); //800
 	net.SetCostFun(new QuadraticCost());
 	//---------------------
 	vector<Matrix<double>> TrainingData;
@@ -33,6 +34,8 @@ int main()
 	{
 		auto img = mln.images(i);
 		Matrix<double> ImgMat(28,28);
+		//Matrix<double> ImgMat(1, 28*28);
+
 		for (int j = 0; j < 28 * 28; j++)
 		{
 			ImgMat[j] = img[j];
@@ -58,6 +61,7 @@ int main()
 	{
 		auto img = mln2.images(i);
 		Matrix<double> ImgMat(28, 28);
+		//Matrix<double> ImgMat(1, 28 * 28);
 		for (int j = 0; j < 28 * 28; j++)
 		{
 			ImgMat[j] = img[j];

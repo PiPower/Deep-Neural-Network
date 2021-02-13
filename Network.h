@@ -2,6 +2,7 @@
 #include "DenseLayer.h"
 #include "CostFunction.h"
 #include "Tensor2D.h"
+#include "ConvLayer.h"
 
 typedef std::vector< Matrix<double>> MatrixD_Array;
 
