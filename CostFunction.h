@@ -5,8 +5,8 @@ class CostFunction
 protected:
 	CostFunction() = default;
 public:
-	virtual Matrix<double> Function(const Matrix<double>& A, const Matrix<double>& Y);
-	virtual Matrix<double> Function_Der(const Matrix<double>& A, const Matrix<double>& Y);
+	virtual Matrix<float> Function(const Matrix<float>& A, const Matrix<float>& Y);
+	virtual Matrix<float> Function_Der(const Matrix<float>& A, const Matrix<float>& Y);
 	virtual ~CostFunction() ;
 };
 
@@ -15,8 +15,8 @@ class QuadraticCost : public CostFunction
 {
 public:
 	QuadraticCost() = default;
-	Matrix<double> Function(const Matrix<double>& A, const Matrix<double>& Y);
-    Matrix<double> Function_Der(const Matrix<double>& A, const Matrix<double>& Y);
+	Matrix<float> Function(const Matrix<float>& A, const Matrix<float>& Y);
+    Matrix<float> Function_Der(const Matrix<float>& A, const Matrix<float>& Y);
 };
 
 

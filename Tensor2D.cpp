@@ -1,6 +1,6 @@
 #include "Tensor2D.h"
 
-Tensor2D::Tensor2D(const std::vector<std::vector<Matrix<double>>>& original)
+Tensor2D::Tensor2D(const std::vector<std::vector<Matrix<float>>>& original)
 {
 	for (int i = 0; i < original.size(); i++)
 	{
@@ -12,12 +12,12 @@ Tensor2D::Tensor2D()
 {
 }
 
-void Tensor2D::Append(const Matrix<double>& matrix)
+void Tensor2D::Append(const Matrix<float>& matrix)
 {
 	Tensor.back().Append(matrix);
 }
 
-void Tensor2D::Append(const std::vector<Matrix<double>>& MatrixList)
+void Tensor2D::Append(const std::vector<Matrix<float>>& MatrixList)
 {
 	Tensor.push_back(MatrixList);
 }

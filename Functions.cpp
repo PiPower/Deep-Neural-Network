@@ -1,11 +1,11 @@
 #include "Functions.h"
 
-Matrix<double> ActivationFunction::Function(Matrix<double> Z)
+Matrix<float> ActivationFunction::Function(Matrix<float> Z)
 {
 	return Z;
 }
 
-Matrix<double> ActivationFunction::Function_Der(Matrix<double> Z)
+Matrix<float> ActivationFunction::Function_Der(Matrix<float> Z)
 {
 	return Z;
 }
@@ -15,7 +15,7 @@ ActivationFunction::~ActivationFunction()
 }
 
 
-Matrix<double> Sigmoid::Function(Matrix<double> Z)
+Matrix<float> Sigmoid::Function(Matrix<float> Z)
 {
 	for (int j = 0; j < Z.GetColumns(); j++)
 	{
@@ -27,12 +27,12 @@ Matrix<double> Sigmoid::Function(Matrix<double> Z)
 	return Z;
 }
 
-double Sigmoid::SigmoidFunction(double x)
+float Sigmoid::SigmoidFunction(float x)
 {
 	return  1 / (std::pow(M_E, -x) + 1);
 }
 
-Matrix<double> Sigmoid::Function_Der(Matrix<double> z)
+Matrix<float> Sigmoid::Function_Der(Matrix<float> z)
 {
 	for (int j = 0; j < z.GetColumns(); j++)
 	{
@@ -45,39 +45,39 @@ Matrix<double> Sigmoid::Function_Der(Matrix<double> z)
 	return z;
 }
 
-Matrix<double> RELU::Function(Matrix<double> Z)
+Matrix<float> RELU::Function(Matrix<float> Z)
 
 {
 	for (int j = 0; j < Z.GetColumns(); j++)
 	{
 		for (int i = 0; i < Z.GetRows(); i++)
 		{
-			double x = Z.GetAt(i, j) * (Z.GetAt(i, j) > 0);
+			float x = Z.GetAt(i, j) * (Z.GetAt(i, j) > 0);
 			Z.SetValue(i, j, x);
 		}
 	}
 	return Z;
 }
 
-Matrix<double> RELU::Function_Der(Matrix<double> Z)
+Matrix<float> RELU::Function_Der(Matrix<float> Z)
 {
 	for (int j = 0; j < Z.GetColumns(); j++)
 	{
 		for (int i = 0; i < Z.GetRows(); i++)
 		{
-			double x = 1.0 * (Z.GetAt(i, j) > 0);
+			float x = 1.0 * (Z.GetAt(i, j) > 0);
 			Z.SetValue(i, j, x);
 		}
 	}
 	return Z;
 }
 
-double TanH::TanHFunction(double x)
+float TanH::TanHFunction(float x)
 {
 	return (std::pow(M_E, 2.0*x)-1) / (std::pow(M_E, 2.0*x) + 1);
 }
 
-Matrix<double> TanH::Function(Matrix<double> Z)
+Matrix<float> TanH::Function(Matrix<float> Z)
 {
 	for (int j = 0; j < Z.GetColumns(); j++)
 	{
@@ -89,7 +89,7 @@ Matrix<double> TanH::Function(Matrix<double> Z)
 	return Z;
 }
 
-Matrix<double> TanH::Function_Der(Matrix<double> Z)
+Matrix<float> TanH::Function_Der(Matrix<float> Z)
 {
 	for (int j = 0; j < Z.GetColumns(); j++)
 	{
@@ -102,9 +102,9 @@ Matrix<double> TanH::Function_Der(Matrix<double> Z)
 }
 
 // Its not gonna work with Conv Layer 
-Matrix<double> Softmax::Function(Matrix<double> Z)
+Matrix<float> Softmax::Function(Matrix<float> Z)
 {
-	double denominator = 0;
+	float denominator = 0;
 	for (int i = 0; i < Z.GetRows(); i++)
 	{
 		denominator += pow(M_E, Z.GetAt(i, 0));
@@ -117,9 +117,9 @@ Matrix<double> Softmax::Function(Matrix<double> Z)
 	return Z;
 }
 
-Matrix<double> Softmax::Function_Der(Matrix<double> Z)
+Matrix<float> Softmax::Function_Der(Matrix<float> Z)
 {
-	double denominator = 0;
+	float denominator = 0;
 	for (int i = 0; i < Z.GetRows(); i++)
 	{
 		denominator += pow(M_E, Z.GetAt(i, 0));
@@ -128,8 +128,8 @@ Matrix<double> Softmax::Function_Der(Matrix<double> Z)
 
 	for (int i = 0; i < Z.GetRows(); i++)
 	{
-		double Value = 0;
-		double Z_i = pow(M_E, Z.GetAt(i, 0));
+		float Value = 0;
+		float Z_i = pow(M_E, Z.GetAt(i, 0));
 		for (int j = 0; j < Z.GetRows(); j++)
 		{
 			if (i == j) Value += Z_i / denominator * (1.0 - Z_i / denominator);

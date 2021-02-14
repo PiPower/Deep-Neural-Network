@@ -19,13 +19,13 @@ void Network::AddLayer(BaseLayer* layer)
 	Layers.push_back(layer);
 }
 
-std::vector<Matrix<double>>  Network::Predict(const std::vector<Matrix<double>>& Input)
+std::vector<Matrix<float>>  Network::Predict(const std::vector<Matrix<float>>& Input)
 {
-	std::vector<Matrix<double>> Predictions;
-	std::vector<Matrix<double>> Buffor;
+	std::vector<Matrix<float>> Predictions;
+	std::vector<Matrix<float>> Buffor;
 	for (int i = 0; i < Input.size(); i++)
 	{
-		std::vector<Matrix<double>> Buffor;
+		std::vector<Matrix<float>> Buffor;
 		Buffor.push_back( Input[i] );
 		for (auto layer : Layers)
 		{
@@ -45,7 +45,7 @@ void Network::SetCostFun(CostFunction* CostFunc_)
 
 
 
-/*std::vector<Matrix<double>> Network::Predict_Training(std::vector<Matrix<double>> Input, std::vector<long unsigned int> indexes,)
+/*std::vector<Matrix<float>> Network::Predict_Training(std::vector<Matrix<float>> Input, std::vector<long unsigned int> indexes,)
 {
 	for (int i = 0; i < Input.size(); i++)
 	{
@@ -58,7 +58,7 @@ void Network::SetCostFun(CostFunction* CostFunc_)
 }*/
 
 
-void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, int BatchSize,int epochs, double LearningRate)
+void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, int BatchSize,int epochs, float LearningRate)
 {
 	assert(TrainingData.size() == TrainingLabels.size() && CostFunc != nullptr  && LearningRate > 0);
 	std::vector<long unsigned int > indexes;
@@ -96,9 +96,9 @@ void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, 
 			//Per Batch iterating
 			while( i < BatchSize && (i+batch)< TrainingData.size())
 			{
-				
-                // ---- Calculating Nabla that will be later devided by batch size element wise 
-				auto DeltaNabla = BackPropagation(TrainingData[indexes[i + batch]], TrainingLabels[indexes[i + batch]]);
+					
+                // ---- Calculating Nabla that will be later devided by batch size element wise  batch* BatchSize
+				auto DeltaNabla = BackPropagation(TrainingData[indexes[i + batch ]], TrainingLabels[indexes[i + batch]]);
 
 				NablaWeights = NablaWeights + DeltaNabla.first;
 				NablaBiases = NablaBiases + DeltaNabla.second;
@@ -133,14 +133,14 @@ Network::~Network()
 	Layers.clear();
 }
 
-std::pair<Tensor2D, Tensor2D > Network::BackPropagation(Matrix<double>& Training_Data,Matrix<double>& label)
+std::pair<Tensor2D, Tensor2D > Network::BackPropagation(Matrix<float>& Training_Data,Matrix<float>& label)
 {
 	std::stack<Tensor1D> ActivationOutput; // output after activation function 
 	std::stack<Tensor1D> Z_Output;// output after matrix operation 
 
 
 	//---------------------- Forward Pass
-	ActivationOutput.push( vector<Matrix<double>>{Training_Data} );
+	ActivationOutput.push( vector<Matrix<float>>{Training_Data} );
 	
 	for (int index =0 ; index<Layers.size();index++)
 	{

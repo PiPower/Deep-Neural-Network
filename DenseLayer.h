@@ -10,21 +10,21 @@ public:
 	int GetInDim() { return Input_Dim; }
 	Tensor1D GetWeights(){return Tensor1D(Weights);}
 	Tensor1D GetBiases() { return Tensor1D(Biases); }
-	void UpdateWeights(const std::vector<Matrix<double>>& Weights_, const double& Eta);
-	void UpdateBiases(const std::vector<Matrix<double>>& Biases_, const double& Eta);
-	std::vector<Matrix<double>> ActivationPrime(std::vector<Matrix<double>>& Z);
-	std::vector<Matrix<double>> ApplyActivation(std::vector<Matrix<double>>& Z);
-	std::vector<Matrix<double>> Mul(std::vector<Matrix<double>>& A);
-	std::vector<Matrix<double>> GetNablaWeight();
-	std::vector<Matrix<double>> GetNablaBias();
+	void UpdateWeights(const std::vector<Matrix<float>>& Weights_, const float& Eta);
+	void UpdateBiases(const std::vector<Matrix<float>>& Biases_, const float& Eta);
+	std::vector<Matrix<float>> ActivationPrime(std::vector<Matrix<float>>& Z);
+	std::vector<Matrix<float>> ApplyActivation(std::vector<Matrix<float>>& Z);
+	std::vector<Matrix<float>> Mul(std::vector<Matrix<float>>& A);
+	std::vector<Matrix<float>> GetNablaWeight();
+	std::vector<Matrix<float>> GetNablaBias();
 	Tensor1D CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation);
 	Tensor1D CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation);
 	~DenseLayer();
 private:
 	int Output_Dim;
 	int Input_Dim;
-	Matrix<double> Weights;
-	Matrix<double> Biases;
+	Matrix<float> Weights;
+	Matrix<float> Biases;
 	ActivationFunction* Func = nullptr;
 };
 

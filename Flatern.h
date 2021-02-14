@@ -5,11 +5,11 @@ class Flatern : public BaseLayer
 {
 public:
 	Flatern() = default;
-	std::vector<Matrix<double>> Mul(std::vector<Matrix<double>>& A);
-	std::vector<Matrix<double>> GetNablaWeight();
-	std::vector<Matrix<double>> GetNablaBias();
+	std::vector<Matrix<float>> Mul(std::vector<Matrix<float>>& A);
+	std::vector<Matrix<float>> GetNablaWeight();
+	std::vector<Matrix<float>> GetNablaBias();
 private:
-	std::vector<Matrix<double>> ShapeWeight;
-	std::vector<Matrix<double>> ShapeBias;
+	std::vector<Matrix<float>> ShapeWeight;
+	std::vector<Matrix<float>> ShapeBias;
 };
 

@@ -4,7 +4,7 @@ DenseLayer::DenseLayer(int input_dim, int output_dim, ActivationFunction* Func_,
 	:
 Output_Dim(output_dim), Input_Dim(input_dim)
 {
-	std::normal_distribution<double> unif(0, 1);
+	std::normal_distribution<float> unif(0, 1);
 	std::random_device rd;
 	std::mt19937_64 gen(rd());
 	Weights = Matrix( input_dim, output_dim, init, &gen, &unif );
@@ -13,7 +13,7 @@ Output_Dim(output_dim), Input_Dim(input_dim)
 	case WeightNormalization::RoI:
 		Weights = Weights * (1.0 / sqrt(input_dim));
 		break;
-	case WeightNormalization::DoubleRoI:
+	case WeightNormalization::floatRoI:
 		Weights = Weights * (2.0 / sqrt(input_dim));
 		break;
 	default:
@@ -24,42 +24,42 @@ Output_Dim(output_dim), Input_Dim(input_dim)
 }
 
 
-void DenseLayer::UpdateWeights(const std::vector<Matrix<double>>& Weights_, const double& Eta)
+void DenseLayer::UpdateWeights(const std::vector<Matrix<float>>& Weights_, const float& Eta)
 {
 	Weights += Weights_[0]* Eta;
 }
 
-void DenseLayer::UpdateBiases(const std::vector<Matrix<double>>& Biases_, const double& Eta)
+void DenseLayer::UpdateBiases(const std::vector<Matrix<float>>& Biases_, const float& Eta)
 {
 	Biases += Biases_[0] * Eta;
 }
 
-std::vector<Matrix<double>> DenseLayer::ActivationPrime(std::vector<Matrix<double>>& Z)
+std::vector<Matrix<float>> DenseLayer::ActivationPrime(std::vector<Matrix<float>>& Z)
 {
-	std::vector<Matrix<double>> F{ Func->Function_Der(Z.back()) };
+	std::vector<Matrix<float>> F{ Func->Function_Der(Z.back()) };
 	 return F;
 }
 
-std::vector<Matrix<double>> DenseLayer::ApplyActivation(std::vector<Matrix<double>>& Z)
+std::vector<Matrix<float>> DenseLayer::ApplyActivation(std::vector<Matrix<float>>& Z)
 {
-	std::vector<Matrix<double>> F{ Func->Function(Z.back()) };
+	std::vector<Matrix<float>> F{ Func->Function(Z.back()) };
 	return F;
 }
 
-std::vector<Matrix<double>> DenseLayer::Mul(std::vector<Matrix<double>>& A)
+std::vector<Matrix<float>> DenseLayer::Mul(std::vector<Matrix<float>>& A)
 {
-	std::vector<Matrix<double>> Z{ Weights * A.back() + Biases };
+	std::vector<Matrix<float>> Z{ Weights * A.back() + Biases };
 	return Z;
 }
 
-std::vector<Matrix<double>> DenseLayer::GetNablaWeight()
+std::vector<Matrix<float>> DenseLayer::GetNablaWeight()
 {
-	return std::vector<Matrix<double>>{Matrix<double>(Input_Dim, Output_Dim)};
+	return std::vector<Matrix<float>>{Matrix<float>(Input_Dim, Output_Dim)};
 }
 
-std::vector<Matrix<double>> DenseLayer::GetNablaBias()
+std::vector<Matrix<float>> DenseLayer::GetNablaBias()
 {
-	return std::vector<Matrix<double>>{Matrix<double>(1, Output_Dim)};
+	return std::vector<Matrix<float>>{Matrix<float>(1, Output_Dim)};
 }
 
 Tensor1D DenseLayer::CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation)

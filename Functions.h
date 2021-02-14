@@ -2,15 +2,15 @@
 
 #include <cmath>
 #include "Matrix.h"
-const double M_E = 2.71828182845904523536;
+const float M_E = 2.71828182845904523536;
 
 class ActivationFunction
 {
 protected:
 	ActivationFunction() = default;
 public:
-	virtual Matrix<double> Function(Matrix<double> Z);
-	virtual Matrix<double> Function_Der(Matrix<double> Z);
+	virtual Matrix<float> Function(Matrix<float> Z);
+	virtual Matrix<float> Function_Der(Matrix<float> Z);
 	virtual ~ActivationFunction();
 };
 
@@ -19,9 +19,9 @@ class Sigmoid : public ActivationFunction
 public:
 	Sigmoid() = default;
 
-	Matrix<double> Function(Matrix<double> Z);
-	Matrix<double> Function_Der(Matrix<double> Z);
-	double  SigmoidFunction(double x);
+	Matrix<float> Function(Matrix<float> Z);
+	Matrix<float> Function_Der(Matrix<float> Z);
+	float  SigmoidFunction(float x);
 };
 
 class RELU : public ActivationFunction
@@ -29,17 +29,17 @@ class RELU : public ActivationFunction
 public:
 	RELU() = default;
 
-	Matrix<double> Function(Matrix<double> Z);
-	Matrix<double> Function_Der(Matrix<double> Z);
+	Matrix<float> Function(Matrix<float> Z);
+	Matrix<float> Function_Der(Matrix<float> Z);
 };
 
 class TanH : public ActivationFunction
 {
 public:
 	TanH() = default;
-	double TanHFunction(double x);
-	Matrix<double> Function(Matrix<double> Z);
-	Matrix<double> Function_Der(Matrix<double> Z);
+	float TanHFunction(float x);
+	Matrix<float> Function(Matrix<float> Z);
+	Matrix<float> Function_Der(Matrix<float> Z);
 };
 
 
@@ -47,15 +47,15 @@ class Softmax : public ActivationFunction
 {
 public:
 	Softmax() = default;
-	Matrix<double> Function(Matrix<double> Z);
-	Matrix<double> Function_Der(Matrix<double> Z);
+	Matrix<float> Function(Matrix<float> Z);
+	Matrix<float> Function_Der(Matrix<float> Z);
 };
 
 /*
 
-Matrix<double> Softmax( Matrix<double> z)
+Matrix<float> Softmax( Matrix<float> z)
 {
-	double denominator = 0;
+	float denominator = 0;
 	for (int i = 0; i < z.GetRows(); i++)
 	{
 		denominator += pow(M_E, z.GetAt(i, 0));
@@ -68,9 +68,9 @@ Matrix<double> Softmax( Matrix<double> z)
 	return z;
 }
 
-Matrix<double> DerivativeSoftmax(Matrix<double> z)
+Matrix<float> DerivativeSoftmax(Matrix<float> z)
 {
-	double denominator = 0;
+	float denominator = 0;
 	for (int i = 0; i < z.GetRows(); i++)
 	{
 		denominator += pow(M_E, z.GetAt(i, 0));
@@ -79,8 +79,8 @@ Matrix<double> DerivativeSoftmax(Matrix<double> z)
 
 	for (int i = 0; i < z.GetRows(); i++)
 	{
-		double Value = 0;
-		double Z_i = pow(M_E, z.GetAt(i, 0));
+		float Value = 0;
+		float Z_i = pow(M_E, z.GetAt(i, 0));
 		for (int j = 0; j < z.GetRows(); j++)
 		{
 			if (i == j) Value += Z_i / denominator * (1.0 - Z_i / denominator)* z.GetAt(j, 0);

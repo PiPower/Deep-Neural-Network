@@ -53,7 +53,7 @@ mnist_loader::load_images(std::string image_file, int num)
 		n_cols = ReverseInt(n_cols);
 		for (int i = 0; i < num; i++)
 		{
-            vector<double> img;
+            vector<float> img;
 			for (int r = 0; r < n_rows; r++)
 			{
 				for (int c = 0; c < n_cols; c++)
@@ -61,7 +61,7 @@ mnist_loader::load_images(std::string image_file, int num)
 					unsigned char temp = 0;
                     ifs.read((char*)&temp, sizeof(temp));
 					int l = (n_rows * r) + c;
-                    img.push_back((double)temp / 255.0);
+                    img.push_back((float)temp / 255.0);
 				}
 			}
             m_images.push_back(img);

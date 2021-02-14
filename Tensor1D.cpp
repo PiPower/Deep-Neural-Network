@@ -1,10 +1,10 @@
 #include "Tensor1D.h"
-Tensor1D::Tensor1D(const std::vector<Matrix<double>>& original)
+Tensor1D::Tensor1D(const std::vector<Matrix<float>>& original)
 {
 	Tensor = original;
 }
 
-Tensor1D::Tensor1D(const Matrix<double>& original)
+Tensor1D::Tensor1D(const Matrix<float>& original)
 {
 	Tensor.push_back(original);
 }
@@ -13,12 +13,12 @@ Tensor1D::Tensor1D()
 {
 }
 
-void Tensor1D::Append(const Matrix<double>& matrix)
+void Tensor1D::Append(const Matrix<float>& matrix)
 {
 	Tensor.push_back(matrix);
 }
 
-std::vector<Matrix<double>>& Tensor1D::GetTensor()
+std::vector<Matrix<float>>& Tensor1D::GetTensor()
 {
 	return Tensor; 
 }
@@ -47,7 +47,7 @@ Tensor1D Tensor1D::Tensor1DHadamard(const Tensor1D& Lhs, const Tensor1D& Rhs)
 	return Out;
 }
 
-std::vector<Matrix<double>>& Tensor1D::operator[](int i)
+std::vector<Matrix<float>>& Tensor1D::operator[](int i)
 {
 	return Tensor;
 }
@@ -84,7 +84,7 @@ Tensor1D Tensor1D::Convolution(const Tensor1D& Img, const Tensor1D& Kernel)
 	out.Tensor.resize(Kernel.Tensor.size());
 	for (int i = 0; i < Kernel.Tensor.size(); i++)
 	{
-		out.Tensor[i] = Matrix<double>::Convolution(Img.Tensor[0], Kernel.Tensor[i]);
+		out.Tensor[i] = Matrix<float>::Convolution(Img.Tensor[0], Kernel.Tensor[i]);
 	}
 
 	return out;

@@ -16,16 +16,16 @@ int main()
 	int TestImg = 10000;
 
 	Network net;
-	//net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
-	//net.AddLayer(new DenseLayer{ 28*28,32,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI });
-	//net.AddLayer(new ConvLayer(1, 1, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::DoubleRoI) );
-	net.AddLayer(new ConvLayer(1, 2, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::DoubleRoI));
+	//net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::floatRoI });
+	//net.AddLayer(new DenseLayer{ 28*28,32,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::floatRoI });
+	//net.AddLayer(new ConvLayer(1, 1, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::floatRoI) );
+	net.AddLayer(new ConvLayer(1, 2, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::floatRoI));
 	net.AddLayer(new Flatern());
-	net.AddLayer(new DenseLayer{ 1152,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::DoubleRoI }); //800
+	net.AddLayer(new DenseLayer{ 24*24*2,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::floatRoI }); //800
 	net.SetCostFun(new QuadraticCost());
 	//---------------------
-	vector<Matrix<double>> TrainingData;
-	vector<Matrix<double>> TrainingLabel;
+	vector<Matrix<float>> TrainingData;
+	vector<Matrix<float>> TrainingLabel;
 
 	mnist_loader mln("train-images.idx3-ubyte", "train-labels.idx1-ubyte", NumberImg);
 
@@ -33,8 +33,8 @@ int main()
 	for (int i = 0;i < NumberImg; i++)
 	{
 		auto img = mln.images(i);
-		Matrix<double> ImgMat(28,28);
-		//Matrix<double> ImgMat(1, 28*28);
+		Matrix<float> ImgMat(28,28);
+		//Matrix<float> ImgMat(1, 28*28);
 
 		for (int j = 0; j < 28 * 28; j++)
 		{
@@ -42,33 +42,33 @@ int main()
 		}
 		TrainingData.push_back(ImgMat);
 
-		Matrix<double> Label(1, 10);
+		Matrix<float> Label(1, 10);
 		Label.SetValue(0, mln.labels(i), 1);
 		TrainingLabel.push_back(Label);
 	}
 
 
 
-	net.Train(TrainingData, TrainingLabel, 100, 3 , 0.03);
+	net.Train(TrainingData, TrainingLabel, 100, 20 , 0.03);
 
 
-	vector<Matrix<double>> TestData;
-	vector<Matrix<double>> TestLabel;
+	vector<Matrix<float>> TestData;
+	vector<Matrix<float>> TestLabel;
 
 	mnist_loader mln2("Test_Img_Data.idx1-ubyte", "Test_Labels.idx1-ubyte", TestImg);
 
 	for (int i = 0; i < TestImg; i++)
 	{
 		auto img = mln2.images(i);
-		Matrix<double> ImgMat(28, 28);
-		//Matrix<double> ImgMat(1, 28 * 28);
+		Matrix<float> ImgMat(28, 28);
+		//Matrix<float> ImgMat(1, 28 * 28);
 		for (int j = 0; j < 28 * 28; j++)
 		{
 			ImgMat[j] = img[j];
 		}
 		TestData.push_back(ImgMat);
 
-		Matrix<double> Label(1, 10);
+		Matrix<float> Label(1, 10);
 		Label.SetValue(0, mln2.labels(i), 1);
 		TestLabel.push_back(Label);
 	}

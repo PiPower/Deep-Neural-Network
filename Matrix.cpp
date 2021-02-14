@@ -1,9 +1,9 @@
 #include "Matrix.h"
 
-Matrix<double> Hadamard(const Matrix<double>& a1, const Matrix<double>& a2)
+Matrix<float> Hadamard(const Matrix<float>& a1, const Matrix<float>& a2)
 {
 	assert(a1.Columns == a2.Columns && a1.Rows == a2.Rows);
-	Matrix<double> Out(a1.Columns, a1.Rows);
+	Matrix<float> Out(a1.Columns, a1.Rows);
 
 	for (int y = 0; y < a1.Rows; y++)
 	{

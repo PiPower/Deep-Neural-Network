@@ -7,7 +7,7 @@
 template <typename Type>
 class Matrix
 {
-	friend Matrix<double> Hadamard(const Matrix<double>& a1, const  Matrix<double>& a2);
+	friend Matrix<float> Hadamard(const Matrix<float>& a1, const  Matrix<float>& a2);
 public:
 	enum class Init_Type
 	{
@@ -15,7 +15,7 @@ public:
 		RANDOM_INIT = 1,
 	};
 public:
-	Matrix( int Columns = 1, int Rows = 1,Init_Type init= Init_Type::ZERO_INIT , std::mt19937_64* gen = nullptr, std::normal_distribution<double>* unif=nullptr)
+	Matrix( int Columns = 1, int Rows = 1,Init_Type init= Init_Type::ZERO_INIT , std::mt19937_64* gen = nullptr, std::normal_distribution<float>* unif=nullptr)
 		:
 		Columns(Columns), Rows(Rows)
 	{
@@ -88,12 +88,12 @@ public:
 	}
 
 	// To make this function work all matrices MUST have te same number of columns and rows
-	static Matrix<double> CopyFromVector( std::vector<Matrix<Type>>& List)
+	static Matrix<float> CopyFromVector( std::vector<Matrix<Type>>& List)
 	{
 		int nrRows = List[0].GetRows();
 		int nrColumns = List[0].GetColumns();
 
-		Matrix<double> Out(1, nrRows * nrColumns * List.size());
+		Matrix<float> Out(1, nrRows * nrColumns * List.size());
 		for (int i = 0; i < List.size(); i++)
 		{
 			int index = List[0].Rows * List[0].Columns * i;
@@ -103,7 +103,7 @@ public:
 		return Out;
 	}
 
-	double& operator[](int index)
+	float& operator[](int index)
 	{
 		return MatPtr[index];
 	}
@@ -136,7 +136,7 @@ public:
 
 	}
 
-	void operator+=(const double& rhs)
+	void operator+=(const float& rhs)
 	{
 
 		for (int i = 0; i < Rows * Columns; i++)
@@ -227,12 +227,12 @@ public:
 		
 	}
 
-	std::vector<Matrix<double>> ReshapeFlatMatrix(int nrColumns, int nrRows)
+	std::vector<Matrix<float>> ReshapeFlatMatrix(int nrColumns, int nrRows)
 	{
 		int MatrixCount = (Columns * Rows) / (nrColumns * nrRows);
-		assert((double)(Columns * Rows) / (double)(nrColumns * nrRows) == MatrixCount);
+		assert((float)(Columns * Rows) / (float)(nrColumns * nrRows) == MatrixCount);
 
-		std::vector<Matrix<double>> out;
+		std::vector<Matrix<float>> out;
 		out.resize(MatrixCount);
 		for (int i = 0; i < MatrixCount; i++)
 		{
@@ -244,9 +244,9 @@ public:
 
 		return out;
 	}
-	Matrix<Type> operator*(const double& number) const
+	Matrix<Type> operator*(const float& number) const
 	{
-		Matrix<double> out(Columns, Rows);
+		Matrix<float> out(Columns, Rows);
 
 		for (int i = 0; i < Rows * Columns; i++)
 		{
@@ -275,7 +275,7 @@ public:
 			for (int g = 0; g < Columns; g++)
 			{
 				int index = i * Columns + g;
-				double wartosc = MatPtr[index];
+				float wartosc = MatPtr[index];
 				std::cout << "   " << MatPtr[index];
 			}
 			std::cout << "|\n";
@@ -284,8 +284,8 @@ public:
 	static Matrix<Type> Convolution(const Matrix<Type>& Image,const Matrix<Type>& kernel,int Step_Size=1)
 	{
 		//Checks if specified kernel and step size can be used
-		assert( (double)(Image.Columns - kernel.Columns) / Step_Size + 1 == floor((double)(Image.Columns - kernel.Columns) / Step_Size + 1) );
-		assert((double)(Image.Rows - kernel.Rows) / Step_Size + 1 == floor((double)(Image.Rows - kernel.Rows) / Step_Size + 1));
+		assert( (float)(Image.Columns - kernel.Columns) / Step_Size + 1 == floor((float)(Image.Columns - kernel.Columns) / Step_Size + 1) );
+		assert((float)(Image.Rows - kernel.Rows) / Step_Size + 1 == floor((float)(Image.Rows - kernel.Rows) / Step_Size + 1));
 
 
 		Matrix<Type> Out_Mat((Image.Columns- kernel.Columns)/Step_Size+1, (Image.Rows - kernel.Rows) / Step_Size + 1);
@@ -295,7 +295,7 @@ public:
 			for (int x = 0; x < Out_Mat.GetColumns(); x++)
 			{
 //-------------------------------------------------------------------
-				double result = 0;
+				float result = 0;
 				for (int y2 = 0; y2 < kernel.Rows; y2++)
 				{
 					for (int x2 = 0; x2 < kernel.Columns; x2++)
@@ -316,4 +316,4 @@ private:
 	int Rows;
 };
 
-typedef Matrix<double>::Init_Type  MatrixInit;
+typedef Matrix<float>::Init_Type  MatrixInit;

@@ -10,7 +10,7 @@ public:
 	{
 		None,
 		RoI, // Root of input 
-		DoubleRoI // Double root of input
+		floatRoI // float root of input
 	};
 protected:
 	BaseLayer() = default;
@@ -19,13 +19,13 @@ public:
 	virtual int GetInDim();
 	virtual  Tensor1D GetWeights();
 	virtual  Tensor1D GetBiases();
-	virtual void UpdateWeights(const std::vector<Matrix<double>>& Weights_,const double& Eta);
-	virtual void UpdateBiases(const std::vector<Matrix<double>>& Biases_, const double& Eta);
-	virtual std::vector<Matrix<double>> ActivationPrime(std::vector<Matrix<double> >& Z);
-	virtual std::vector<Matrix<double>> ApplyActivation(std::vector<Matrix<double> >& Z);
-	virtual std::vector<Matrix<double>> Mul(std::vector<Matrix<double>>& A);
-	virtual  std::vector<Matrix<double>> GetNablaWeight();
-	virtual  std::vector<Matrix<double>> GetNablaBias();
+	virtual void UpdateWeights(const std::vector<Matrix<float>>& Weights_,const float& Eta);
+	virtual void UpdateBiases(const std::vector<Matrix<float>>& Biases_, const float& Eta);
+	virtual std::vector<Matrix<float>> ActivationPrime(std::vector<Matrix<float> >& Z);
+	virtual std::vector<Matrix<float>> ApplyActivation(std::vector<Matrix<float> >& Z);
+	virtual std::vector<Matrix<float>> Mul(std::vector<Matrix<float>>& A);
+	virtual  std::vector<Matrix<float>> GetNablaWeight();
+	virtual  std::vector<Matrix<float>> GetNablaBias();
 	virtual Tensor1D CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation);
 	virtual Tensor1D CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation);
 };

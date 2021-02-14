@@ -1,6 +1,6 @@
 #include "Flatern.h"
 
-std::vector<Matrix<double>> Flatern::Mul(std::vector<Matrix<double>>& A)
+std::vector<Matrix<float>> Flatern::Mul(std::vector<Matrix<float>>& A)
 {
 	int nrRows = A[0].GetRows();
 	int nrColumns = A[0].GetColumns();
@@ -11,17 +11,17 @@ std::vector<Matrix<double>> Flatern::Mul(std::vector<Matrix<double>>& A)
 		ShapeWeight.back().Clear();
 	}
 
-	ShapeBias.push_back(Matrix<double>(1, A.size()));
-	std::vector<Matrix<double>>OutVec{Matrix<double>::CopyFromVector(A)};
+	ShapeBias.push_back(Matrix<float>(1, A.size()));
+	std::vector<Matrix<float>>OutVec{Matrix<float>::CopyFromVector(A)};
 	return OutVec;
 }
 
-std::vector<Matrix<double>> Flatern::GetNablaWeight()
+std::vector<Matrix<float>> Flatern::GetNablaWeight()
 {
 	return ShapeWeight;
 }
 
-std::vector<Matrix<double>> Flatern::GetNablaBias()
+std::vector<Matrix<float>> Flatern::GetNablaBias()
 {
 	return ShapeBias;
 }

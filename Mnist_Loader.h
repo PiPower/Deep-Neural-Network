@@ -8,7 +8,7 @@
 
 class mnist_loader {
 private:
-	std::vector<std::vector<double>> m_images;
+	std::vector<std::vector<float>> m_images;
 	std::vector<int> m_labels;
 	int m_size;
 	int m_rows;
@@ -36,7 +36,7 @@ public:
 	int rows() { return m_rows; }
 	int cols() { return m_cols; }
 
-	std::vector<double> images(int id) { return m_images[id]; }
+	std::vector<float> images(int id) { return m_images[id]; }
 	int labels(int id) { return m_labels[id]; }
 };
 

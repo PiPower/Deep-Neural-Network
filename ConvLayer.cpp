@@ -8,10 +8,10 @@ ConvLayer::ConvLayer(int Input_dim, int Output_dim, Image_Dim Image_dim, Image_D
 Input_Dim(Input_dim),Output_Dim(Output_dim),Func(Func_), img_dim(Image_dim)
 {
 	int index = 0;
-	std::normal_distribution<double> unif(0, 1);
+	std::normal_distribution<float> unif(0, 1);
 	std::random_device rd;
 	std::mt19937_64 gen(rd());
-	Bias = Matrix<double>(1, Output_Dim, init, &gen, &unif);
+	Bias = Matrix<float>(1, Output_Dim, init, &gen, &unif);
 
 
 	for (int i = 0; i < Output_Dim;i++)
@@ -20,14 +20,14 @@ Input_Dim(Input_dim),Output_Dim(Output_dim),Func(Func_), img_dim(Image_dim)
 		for (int j = 0; j < Input_Dim; j++)
 		{
 
-			Matrix<double> Weights(Kernel_Dim.Width, Kernel_Dim.Height,init, &gen, &unif);
+			Matrix<float> Weights(Kernel_Dim.Width, Kernel_Dim.Height,init, &gen, &unif);
 
 			switch (W_Init)
 			{
 			case WeightNormalization::RoI:
 				Weights = Weights * (1.0 / sqrt(Input_dim + Output_Dim));
 				break;
-			case WeightNormalization::DoubleRoI:
+			case WeightNormalization::floatRoI:
 				Weights = Weights * (2.0 / sqrt(Input_dim+ Output_Dim));
 				break;
 			default:
@@ -59,14 +59,14 @@ Tensor1D ConvLayer::GetBiases()
 	return Tensor1D(Bias);
 }
 
-std::vector<Matrix<double>> ConvLayer::ActivationPrime(Images& Z)
+std::vector<Matrix<float>> ConvLayer::ActivationPrime(Images& Z)
 {
-	return std::vector<Matrix<double>>();
+	return std::vector<Matrix<float>>();
 }
 
-std::vector<Matrix<double>> ConvLayer::ApplyActivation(Images& Z)
+std::vector<Matrix<float>> ConvLayer::ApplyActivation(Images& Z)
 {
-	std::vector<Matrix<double>> Out;
+	std::vector<Matrix<float>> Out;
 	Out.resize(Z.size());
 	for (int i = 0;i< Z.size(); i++)
 	{
@@ -76,16 +76,16 @@ std::vector<Matrix<double>> ConvLayer::ApplyActivation(Images& Z)
 	return Out;
 }
 
-std::vector<Matrix<double>> ConvLayer::Mul(Images& A)
+std::vector<Matrix<float>> ConvLayer::Mul(Images& A)
 {
 	Images img;
 	img.resize(Output_Dim);
 	for (int i = 0; i < Output_Dim;  i++)
 	{
-		img[i] = Matrix<double>::Convolution(A[0], Kernels[i][0]);;
+		img[i] = Matrix<float>::Convolution(A[0], Kernels[i][0]);;
 		for (int j = 1; j < Input_Dim; j++)
 		{
-			img[i] += Matrix<double>::Convolution(A[j], Kernels[i][j]);
+			img[i] += Matrix<float>::Convolution(A[j], Kernels[i][j]);
 		}
 		img[i] += Bias.GetAt(i,0);
 	}
@@ -93,9 +93,9 @@ std::vector<Matrix<double>> ConvLayer::Mul(Images& A)
 
 }
 
-std::vector<Matrix<double>> ConvLayer::GetNablaWeight()
+std::vector<Matrix<float>> ConvLayer::GetNablaWeight()
 {
-	std::vector<Matrix<double>> out;
+	std::vector<Matrix<float>> out;
 	for (int i = 0; i < Kernels.size(); i++)
 	{
 		for (int j = 0; j < Kernels[i].size(); j++)
@@ -107,11 +107,11 @@ std::vector<Matrix<double>> ConvLayer::GetNablaWeight()
 	return out;
 }
 
-std::vector<Matrix<double>> ConvLayer::GetNablaBias()
+std::vector<Matrix<float>> ConvLayer::GetNablaBias()
 {
-	Matrix<double> out = Bias;
+	Matrix<float> out = Bias;
 	out.Clear();
-	return vector<Matrix<double>>{out};
+	return vector<Matrix<float>>{out};
 }
 
 Tensor1D ConvLayer::CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation)
@@ -121,5 +121,5 @@ Tensor1D ConvLayer::CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& 
 
 Tensor1D ConvLayer::CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation)
 {
-	return Tensor1D(Matrix<double>(1, Output_Dim));
+	return Tensor1D(Matrix<float>(1, Output_Dim));
 }
