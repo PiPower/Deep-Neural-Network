@@ -18,6 +18,14 @@ void Tensor1D::Append(const Matrix<float>& matrix)
 	Tensor.push_back(matrix);
 }
 
+void Tensor1D::AddPadding(int nrRows, int nrCols)
+{
+	for (auto& mat : Tensor)
+	{
+		mat.AddPadding(nrRows, nrCols);
+	}
+}
+
 std::vector<Matrix<float>>& Tensor1D::GetTensor()
 {
 	return Tensor; 
@@ -47,7 +55,7 @@ Tensor1D Tensor1D::Tensor1DHadamard(const Tensor1D& Lhs, const Tensor1D& Rhs)
 	return Out;
 }
 
-std::vector<Matrix<float>>& Tensor1D::operator[](int i)
+std::vector<Matrix<float>>& Tensor1D::GetArray()
 {
 	return Tensor;
 }
@@ -99,6 +107,11 @@ void Tensor1D::operator=(const Tensor1D& source)
 {
 	Tensor.clear();
 	Tensor = source.Tensor;
+}
+
+Matrix<float>& Tensor1D::operator[](unsigned int i)
+{
+	return Tensor[i];
 }
 
 Tensor1D Tensor1D::operator+(const Tensor1D& source)

@@ -54,12 +54,12 @@ std::vector<Matrix<float>> BaseLayer::GetNablaBias()
     return std::vector<Matrix<float>>();
 }
 
-Tensor1D BaseLayer::CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation)
+Tensor1D BaseLayer::CalculateNablaWeight( Tensor1D& Delta,  Tensor1D& Activation)
 {
     return Tensor1D();
 }
 
-Tensor1D BaseLayer::CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation)
+Tensor1D BaseLayer::CalculateNablaBias( Tensor1D& Delta,  Tensor1D& Activation)
 {
     return Tensor1D();
 }

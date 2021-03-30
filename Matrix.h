@@ -310,6 +310,22 @@ public:
 
 		return Out_Mat;
 	}
+	void AddPadding(unsigned int nrRows,unsigned int nrCols)
+	{
+		std::vector<Type> MatPtr_New;
+		int NewRows = nrRows*2+ Rows;
+		int NewColumns = nrCols*2 + Columns;
+
+		MatPtr_New.resize(NewRows * NewColumns);
+		for (int i = 0; i < Rows; i++)
+		{
+			memcpy(MatPtr_New.data() + (i+ nrRows) * NewColumns + nrCols, MatPtr.data() + i * Columns, sizeof(Type) * Columns);
+		}
+
+		MatPtr = MatPtr_New;
+		Columns = NewColumns;
+		Rows = NewRows;
+	}
 private:
 	std::vector<Type> MatPtr;
 	int Columns;

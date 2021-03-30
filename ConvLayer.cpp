@@ -16,6 +16,7 @@ Input_Dim(Input_dim),Output_Dim(Output_dim),Func(Func_), img_dim(Image_dim)
 
 	for (int i = 0; i < Output_Dim;i++)
 	{
+		krn_dim = Kernel_Dim;
 		Kernel Ker;
 		for (int j = 0; j < Input_Dim; j++)
 		{
@@ -52,6 +53,11 @@ Tensor1D ConvLayer::GetWeights()
 		}
 	}
 	return out;
+}
+
+std::vector<Kernel> ConvLayer::GetWeights_v2()
+{
+	return Kernels;
 }
 
 Tensor1D ConvLayer::GetBiases()
@@ -114,12 +120,48 @@ std::vector<Matrix<float>> ConvLayer::GetNablaBias()
 	return vector<Matrix<float>>{out};
 }
 
-Tensor1D ConvLayer::CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation)
+int ConvLayer::GetOutDim()
 {
-	return Tensor1D::Convolution(Activation, Delta);
+	return Output_Dim;
 }
 
-Tensor1D ConvLayer::CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation)
+Kernel_Dim ConvLayer::GetKernelDim() const
+{
+	return krn_dim;
+}
+
+Tensor1D ConvLayer::CalculateNablaWeight( Tensor1D& Delta,  Tensor1D& Activation)
+{
+	Tensor1D Out;
+
+	for (int i = 0; i < Delta.GetTensor().size(); i++)
+	{
+		for (int j = 0; j < Activation.GetTensor().size(); j++)
+			Out.Append(Matrix<float>::Convolution( Activation.GetTensor()[j], Delta.GetTensor()[i]));
+	}
+
+	return Out;
+}
+
+Tensor1D ConvLayer::CalculateNablaBias( Tensor1D& Delta, Tensor1D& Activation)
 {
 	return Tensor1D(Matrix<float>(1, Output_Dim));
+}
+
+Tensor1D ConvLayer::Convolve_Backprop(Images& A, std::vector<Kernel>& Kernel, int OutChannels, Tensor1D Z_Out)
+{
+	Tensor1D Out;
+	Matrix<float> img;
+	Matrix<float> Z;
+
+	for (int i = 0; i < OutChannels; i++)
+	{
+		img = Matrix<float>::Convolution(A[0], Kernel[0][i]);;
+		for (int y = 1; y < Kernel.size(); y++)
+		{
+			img  += Matrix<float>::Convolution(A[y], Kernel[y][i]);
+		}
+		Out.Append(Hadamard(img, Z_Out[i]));
+	}
+	return Out;
 }

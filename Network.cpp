@@ -2,8 +2,12 @@
 #include <algorithm>
 #include <iostream>
 #include <stack>
+#include <future>
 #include "Flatern.h"
 #include <thread>
+
+
+
 
 using namespace std;
 
@@ -87,7 +91,7 @@ void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, 
 		// Batch iterating 
 		for (int batch = 0; batch < TrainingData.size(); batch = batch + BatchSize)
 		{
-			cout << batch << endl;
+           if((batch / BatchSize )%50==0)	cout <<"Batch nr :" <<batch/ BatchSize << endl;
 
 			NablaWeights.Clear();
 			NablaBiases.Clear();
@@ -97,6 +101,11 @@ void Network::Train(MatrixD_Array& TrainingData, MatrixD_Array& TrainingLabels, 
 			while( i < BatchSize && (i+batch)< TrainingData.size())
 			{
 					
+				//auto T_Data = TrainingData[indexes[i + batch + 1]];
+				//auto T_Label = TrainingLabels[indexes[i + batch + 1]];
+				//future<std::pair<Tensor2D, Tensor2D >> f1 = async([this, &T_Data, &T_Label]
+				//() {return this->BackPropagation(T_Data, T_Label); });
+
                 // ---- Calculating Nabla that will be later devided by batch size element wise  batch* BatchSize
 				auto DeltaNabla = BackPropagation(TrainingData[indexes[i + batch ]], TrainingLabels[indexes[i + batch]]);
 
@@ -210,29 +219,33 @@ std::pair<Tensor2D, Tensor2D > Network::BackPropagation(Matrix<float>& Training_
 			NablaBias[Layers.size() - j] = Layers[Layers.size() - j]->CalculateNablaBias(Delta_L, Activation);
 		}
 		// ----------- gradient for Conv 
-		if (dynamic_cast<ConvLayer*>(Layers[Layers.size() - j]))
+		if (auto Layer = dynamic_cast<ConvLayer*>(Layers[Layers.size() - j]))
 		{
 
-			Tensor1D sp = Layers[Layers.size() - j]->ActivationPrime(Z_Output.top().GetTensor());
-			Z_Output.pop();
-			Tensor1D Weights = Layers[Layers.size() - j + 1]->GetWeights();
-			Weights.Transpose();
+			//Tensor1D sp = Layers[Layers.size() - j]->ActivationPrime(Z_Output.top().GetTensor());
+			
+			//Tensor1D Weights = Layers[Layers.size() - j + 1]->GetWeights();
+			//Weights.Transpose();
 
 			/*if (!dynamic_cast<Flatern*>(Layers[Layers.size() - j + 1]))
 			{
 				Delta_L = Tensor1D::Tensor1DHadamard(Weights * Delta_L, sp);
 			}*/
 
-			if (dynamic_cast<ConvLayer*>(Layers[Layers.size() - j + 1]))
+			if (auto Layer_Next = dynamic_cast<ConvLayer*>(Layers[Layers.size() - j + 1]))
 			{
-				Delta_L = Tensor1D::Tensor1DHadamard(Weights * Delta_L, sp);
+				Kernel_Dim krn_dim = Layer_Next->GetKernelDim();
+				Delta_L.AddPadding(krn_dim.Height-1, krn_dim.Width - 1);
+				std::vector<Kernel> Kernel = Layer_Next->GetWeights_v2();
+				Delta_L = ConvLayer::Convolve_Backprop(Delta_L.GetTensor() , Kernel,Layer->GetOutDim(), Z_Output.top() );
 			}
 
+			Z_Output.pop();
 			Activation = ActivationOutput.top();
 
-			NablaWeight[Layers.size() - j] = Layers[Layers.size() - j]->CalculateNablaWeight(Delta_L, Activation);
+			NablaWeight[Layers.size() - j] = Layer->CalculateNablaWeight(Delta_L, Activation);
 			ActivationOutput.pop();
-			NablaBias[Layers.size() - j] = Layers[Layers.size() - j]->CalculateNablaBias(Delta_L, Activation);
+			NablaBias[Layers.size() - j] = Layer->CalculateNablaBias(Delta_L, Activation);
 		}
 	}
 

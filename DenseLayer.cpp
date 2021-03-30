@@ -62,12 +62,12 @@ std::vector<Matrix<float>> DenseLayer::GetNablaBias()
 	return std::vector<Matrix<float>>{Matrix<float>(1, Output_Dim)};
 }
 
-Tensor1D DenseLayer::CalculateNablaWeight(const Tensor1D& Delta, const Tensor1D& Activation)
+Tensor1D DenseLayer::CalculateNablaWeight( Tensor1D& Delta,  Tensor1D& Activation)
 {
 	return Delta*Activation;
 }
 
-Tensor1D DenseLayer::CalculateNablaBias(const Tensor1D& Delta, const Tensor1D& Activation)
+Tensor1D DenseLayer::CalculateNablaBias( Tensor1D& Delta,  Tensor1D& Activation)
 {
 	return Delta;
 }

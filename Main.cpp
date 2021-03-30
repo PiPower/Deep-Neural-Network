@@ -7,21 +7,22 @@
 #include "ConvLayer.h"
 #include "Flatern.h"
 
-
 using namespace std;
 
 int main()
 {
-	int NumberImg = 60000;
+	int NumberImg = 100;
 	int TestImg = 10000;
 
 	Network net;
 	//net.AddLayer(new DenseLayer{ 28 * 28,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::floatRoI });
 	//net.AddLayer(new DenseLayer{ 28*28,32,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::floatRoI });
-	//net.AddLayer(new ConvLayer(1, 1, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::floatRoI) );
-	net.AddLayer(new ConvLayer(1, 2, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::floatRoI));
-	net.AddLayer(new Flatern());
-	net.AddLayer(new DenseLayer{ 24*24*2,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::floatRoI }); //800
+	net.AddLayer(new ConvLayer(1, 16, Image_Dim{ 28,28 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::floatRoI) );
+	net.AddLayer(new ConvLayer(16, 32, Image_Dim{ 24,24 }, Image_Dim{ 5,5 }, new RELU(), MatrixInit::RANDOM_INIT, DenseLayer::WeightNormalization::floatRoI));
+    net.AddLayer(new Flatern());
+	net.AddLayer(new DenseLayer{ 12800,64,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::floatRoI });
+	net.AddLayer(new DenseLayer{ 64,10,new RELU(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::floatRoI });
+	//net.AddLayer(new DenseLayer{ 32,10,new Sigmoid(),MatrixInit::RANDOM_INIT,DenseLayer::WeightNormalization::floatRoI }); //800
 	net.SetCostFun(new QuadraticCost());
 	//---------------------
 	vector<Matrix<float>> TrainingData;
@@ -49,7 +50,7 @@ int main()
 
 
 
-	net.Train(TrainingData, TrainingLabel, 100, 20 , 0.03);
+	net.Train(TrainingData, TrainingLabel, 100, 10 , 0.03);
 
 
 	vector<Matrix<float>> TestData;
